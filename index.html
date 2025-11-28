@@ -1,0 +1,465 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aitor Cavero | Filmmaker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --bg-color: #ffffff;
+            --bg-hero: #f4f4f4;
+            --text-color: #1a1a1a;
+            --accent-color: #8c8c8c;
+            --font-main: 'Manrope', sans-serif;
+            --transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 { 
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300; 
+            letter-spacing: -0.04em; 
+            line-height: 1.1;
+            color: #1a1a1a;
+        }
+        
+        h2 { font-size: 1.5rem; font-weight: 500; }
+        p { font-size: 1rem; color: var(--accent-color); line-height: 1.6; }
+        
+        a { text-decoration: none; color: inherit; transition: var(--transition); }
+        a:hover { opacity: 0.5; }
+
+        /* --- HEADER --- */
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            mix-blend-mode: difference;
+            color: white;
+        }
+
+        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.02em; text-transform: uppercase; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            padding: 0 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-hero);
+        }
+
+        .parallax-layer {
+            will-change: transform;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+            display: inline-block;
+        }
+
+        .highlight-text {
+            display: block;
+            margin-left: 3rem;
+            font-style: italic;
+            color: #555;
+        }
+
+        /* FIX: No crecer infinito en pantallas muy grandes */
+        .hero-bg-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(200px, 25vw, 620px);
+            font-weight: 700;
+            color: #e6e6e6;
+            z-index: 0;
+            line-height: 0.8;
+            opacity: 0.4;
+            white-space: nowrap;
+        }
+
+        /* --- PORTFOLIO GRID --- */
+        .portfolio {
+            padding: 10vh 5%;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+            gap: 6rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .project-item {
+            position: relative;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: var(--transition);
+        }
+
+        .thumb-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            background: #e5e5e5;
+            border-radius: 20px; /* ✔ MINIATURAS REDONDEADAS */
+        }
+
+        .ratio-horizontal { padding-bottom: 56.25%; }
+        .ratio-vertical { padding-bottom: 125%; }
+
+        .project-img {
+            position: absolute;
+            top: 0; 
+            left: 0;
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            filter: grayscale(100%);
+        }
+
+        .project-item:hover .project-img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .play-btn {
+            color: #1a1a1a;
+            font-size: 0.9rem;
+            font-weight: 700;
+            background: #ffffff;
+            padding: 1rem 2rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .project-item:hover .overlay { opacity: 1; }
+
+        .project-info {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .project-title { font-size: 1.4rem; font-weight: 300; }
+        .project-cat { font-size: 0.8rem; color: var(--accent-color); text-transform: uppercase; letter-spacing: 0.1em; }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #ffffff;
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .modal.active { opacity: 1; pointer-events: all; }
+
+        .video-container {
+            width: 80%;
+            max-width: 1400px;
+            background: black;
+            position: relative;
+            border-radius: 20px; /* ✔ VIDEO REDONDEADO */
+            overflow: hidden;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 2rem; right: 2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #1a1a1a;
+            z-index: 2001;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
+
+        footer {
+            padding: 8rem 5% 4rem;
+            text-align: center;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+        }
+
+        .reveal { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .portfolio { grid-template-columns: 1fr; gap: 4rem; }
+            .highlight-text { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header id="mainHeader">
+    <div class="logo">AITOR CAVERO</div>
+    <nav>
+        <ul>
+            <li><a href="mailto:aitor@ejemplo.com">CONTACTO</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-bg-text parallax-layer" data-speed="-0.15">AITOR</div>
+
+    <div class="parallax-layer" data-speed="0.5">
+        <span class="hero-subtitle">Filmmaker & Editor</span>
+    </div>
+
+    <div class="parallax-layer" data-speed="0.25">
+        <h1>
+            Contando historias
+            <span class="highlight-text">visualmente.</span>
+        </h1>
+    </div>
+</section>
+<h1 class="portfolio">Videos</h1>
+<section class="portfolio">
+    
+    <article class="project-item" onclick="openModal('1141409089','vertical')">
+        <div class="thumb-container ratio-vertical">
+            <img data-vimeo-id="1141409089" class="project-img" alt="Video Vertical">
+            <div class="overlay"><span class="play-btn">Ver Film</span></div>
+        </div>
+        <div class="project-info">
+            <h2 class="project-title">Campaña Privada</h2>
+            <span class="project-cat">Próximo Lanzamiento / Vertical</span>
+        </div>
+    </article>
+
+    <article class="project-item" onclick="openModal('1141420793','horizontal')">
+        <div class="thumb-container ratio-horizontal">
+            <img data-vimeo-id="1141420793" class="project-img" alt="Video Horizontal 2">
+            <div class="overlay"><span class="play-btn">Ver Film</span></div>
+        </div>
+        <div class="project-info">
+            <h2 class="project-title">Atleta Calistenia Freestyle</h2>
+            <span class="project-cat">Deporte / Horizontal</span>
+        </div>
+    </article>
+
+    <article class="project-item" onclick="openModal('1141421644','horizontal')">
+        <div class="thumb-container ratio-horizontal">
+            <img data-vimeo-id="1141421644" class="project-img" alt="Video Horizontal 3">
+            <div class="overlay"><span class="play-btn">Ver Film</span></div>
+        </div>
+        <div class="project-info">
+            <h2 class="project-title">Sesión Entrenamiento Urbano</h2>
+            <span class="project-cat">Deporte / Horizontal</span>
+        </div>
+    </article>
+
+</section>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #F4F4F4;
+            font-family: Arial, sans-serif;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 18px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Galería</h1>
+
+<div class="gallery">
+
+    <!-- Fotos anteriores -->
+    <img src="https://i.ibb.co/32X2Cd3/PSX-20250830-040959.jpg" alt="">
+    <img src="https://i.ibb.co/1YtXB3K3/PSX-20250830-040645.jpg" alt="">
+    <img src="https://i.ibb.co/9HRXzRtr/PSX-20250830-042912.jpg" alt="">
+    <img src="https://i.ibb.co/tT0rHYcv/PSX-20250830-042614.jpg" alt="">
+    <img src="https://i.ibb.co/gFZfWV1j/PSX-20250830-042002.jpg" alt="">
+    <img src="https://i.ibb.co/TxgbZ88S/PSX-20250830-040335.jpg" alt="">
+    <img src="https://i.ibb.co/39vdxJZD/PSX-20250830-040019.jpg" alt="">
+    <img src="https://i.ibb.co/wZnM7m1Y/20251125-DSC6432.jpg" alt="">
+    <img src="https://i.ibb.co/V02JW1K1/20251125-DSC6427.jpg" alt="">
+    <img src="https://i.ibb.co/d0XK461H/20251125-DSC6398.jpg" alt="">
+
+    <!-- Nuevas fotos añadidas -->
+    <img src="https://i.ibb.co/216ywZZg/DSC6193.jpg" alt="">
+    <img src="https://i.ibb.co/2YsWmWH4/DSC6177.jpg" alt="">
+    <img src="https://i.ibb.co/XT9yTQq/DSC6188.jpg" alt="">
+    <img src="https://i.ibb.co/WWXKLLLH/Narojam-Fotos-22.jpg" alt="">
+    <img src="https://i.ibb.co/MyrKKWxG/Narojam-Fotos-24.jpg" alt="">
+    <img src="https://i.ibb.co/xKXsZZV9/Narojam-Fotos-29.jpg" alt="">
+    <img src="https://i.ibb.co/Z168jM9Y/Narojam-Fotos-31.jpg" alt="">
+    <img src="https://i.ibb.co/4w3jD3qX/Narojam-Fotos-27.jpg" alt="">
+
+</div>
+
+</body>
+</html>
+
+
+<footer>
+    <p>&copy; 2025 Aitor Cavero.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal" id="videoModal">
+    <div class="close-modal" onclick="closeModal()">CERRAR ✕</div>
+    <div class="video-container" id="modalContainer"></div>
+</div>
+
+<script>
+/* --- PARALLAX --- */
+window.addEventListener('scroll', () => {
+    const scrollY = window.pageYOffset;
+    const layers = document.querySelectorAll('.parallax-layer');
+
+    layers.forEach(layer => {
+        const speed = layer.getAttribute('data-speed');
+        if (scrollY < window.innerHeight * 1.5) {
+            layer.style.transform = `translateY(${scrollY * speed}px)`;
+        }
+    });
+});
+
+/* --- APPEAR ON SCROLL --- */
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('reveal');
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.project-item').forEach(item => observer.observe(item));
+
+
+/* --- MODAL VIDEO --- */
+const modal = document.getElementById('videoModal');
+const modalContainer = document.getElementById('modalContainer');
+
+function openModal(vimeoId, format) {
+    modal.classList.add('active');
+
+    if (format === 'vertical') {
+        modalContainer.style.aspectRatio = '9/16';
+        modalContainer.style.height = '85vh';
+        modalContainer.style.width = 'auto';
+    } else {
+        modalContainer.style.aspectRatio = '16/9';
+        modalContainer.style.width = '80%';
+        modalContainer.style.height = 'auto';
+    }
+
+    modalContainer.innerHTML = `
+        <iframe 
+            src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&color=ffffff&title=0&byline=0&portrait=0"
+            style="position:absolute;top:0;left:0;width:100%;height:100%;" 
+            frameborder="0" allow="autoplay; fullscreen" allowfullscreen>
+        </iframe>`;
+}
+
+function closeModal() {
+    modal.classList.remove('active');
+    setTimeout(() => { modalContainer.innerHTML = ''; }, 400);
+}
+
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+
+/* --- LOAD REAL VIMEO THUMBNAILS --- */
+async function loadVimeoThumbs() {
+    const imgs = document.querySelectorAll('[data-vimeo-id]');
+
+    imgs.forEach(async img => {
+        const id = img.getAttribute('data-vimeo-id');
+        const url = `https://vimeo.com/api/v2/video/${id}.json`;
+
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            img.src = data[0].thumbnail_large;
+        } catch (err) {
+            console.error("Error cargando miniatura de Vimeo:", err);
+        }
+    });
+}
+
+loadVimeoThumbs();
+</script>
+
+</body>
+</html>
