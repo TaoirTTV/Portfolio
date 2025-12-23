@@ -254,7 +254,7 @@
     <div class="logo">AITOR CAVERO</div>
     <nav>
         <ul>
-            <li><a href="mailto:aitor@ejemplo.com">CONTACTO</a></li>
+            <li><a href="https://wa.link/gv2l3m">CONTACTO</a></li>
         </ul>
     </nav>
 </header>
@@ -308,6 +308,60 @@
             <span class="project-cat">Deporte / Horizontal</span>
         </div>
     </article>
+    <article class="project-item" onclick="openYouTubeModal('sFR1WtoVAfs')">
+    <div class="thumb-container ratio-vertical">
+        <img 
+            src="https://img.youtube.com/vi/sFR1WtoVAfs/maxresdefault.jpg"
+            class="project-img"
+            alt="YouTube Short 1">
+        <div class="overlay">
+            <span class="play-btn">Ver Film</span>
+        </div>
+    </div>
+    <div class="project-info">
+        <h2 class="project-title">Sul Mare</h2>
+        <span class="project-cat">Vertical / Reel</span>
+    </div>
+</article>
+
+<article class="project-item" onclick="openYouTubeModal('srj63XebCds')">
+    <div class="thumb-container ratio-vertical">
+        <img 
+            src="https://img.youtube.com/vi/srj63XebCds/maxresdefault.jpg"
+            class="project-img"
+            alt="YouTube Short 2">
+        <div class="overlay">
+            <span class="play-btn">Ver Film</span>
+        </div>
+    </div>
+    <div class="project-info">
+        <h2 class="project-title">11.11 Restaurant</h2>
+        <span class="project-cat">Vertical / Reel</span>
+    </div>
+</article>
+<script>
+function openYouTubeModal(videoId) {
+    modal.classList.add('active');
+
+    // Forzar formato vertical 9:16
+    modalContainer.style.aspectRatio = '9 / 16';
+    modalContainer.style.height = '85vh';
+    modalContainer.style.width = 'auto';
+
+    modalContainer.innerHTML = `
+        <iframe
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1"
+            style="position:absolute;top:0;left:0;width:100%;height:100%;"
+            frameborder="0"
+            allow="autoplay; fullscreen; encrypted-media"
+            allowfullscreen>
+        </iframe>
+    `;
+}
+</script>
+
+    
+    
 
 </section>
 <!DOCTYPE html>
@@ -345,7 +399,6 @@
 
 <div class="gallery">
 
-    <!-- Fotos anteriores -->
     <img src="https://i.ibb.co/32X2Cd3/PSX-20250830-040959.jpg" alt="">
     <img src="https://i.ibb.co/1YtXB3K3/PSX-20250830-040645.jpg" alt="">
     <img src="https://i.ibb.co/9HRXzRtr/PSX-20250830-042912.jpg" alt="">
@@ -356,16 +409,59 @@
     <img src="https://i.ibb.co/wZnM7m1Y/20251125-DSC6432.jpg" alt="">
     <img src="https://i.ibb.co/V02JW1K1/20251125-DSC6427.jpg" alt="">
     <img src="https://i.ibb.co/d0XK461H/20251125-DSC6398.jpg" alt="">
-
-    <!-- Nuevas fotos añadidas -->
     <img src="https://i.ibb.co/216ywZZg/DSC6193.jpg" alt="">
     <img src="https://i.ibb.co/2YsWmWH4/DSC6177.jpg" alt="">
     <img src="https://i.ibb.co/XT9yTQq/DSC6188.jpg" alt="">
+
+    <img src="https://i.ibb.co/wN20TXWS/Panetone-1.jpg" alt="">
+    <img src="https://i.ibb.co/yFcsgCTh/Panetone-2.jpg" alt="">
+    <img src="https://i.ibb.co/6084TD4D/Panetone-3.jpg" alt="">
+    <img src="https://i.ibb.co/fYR1fvBG/Panetone-4.jpg" alt="">
+    <img src="https://i.ibb.co/NQBPtBH/11-11-Demo-4.jpg" alt="">
+    <img src="https://i.ibb.co/Tq1pGr86/11-11-Demo-3.jpg" alt="">
+    
+    <img src="https://i.ibb.co/VW5zgrdG/11-11-Demo-5.jpg" alt="">
+    <img src="https://i.ibb.co/4nmj3Ht5/11-11-Demo-8.jpg" alt="">
+    <img src="https://i.ibb.co/jPWHP4vQ/11-11-Demo-6.jpg" alt="">
+    <img src="https://i.ibb.co/Hfw1pxMw/11-11-Demo-7.jpg" alt="">
+
     <img src="https://i.ibb.co/WWXKLLLH/Narojam-Fotos-22.jpg" alt="">
     <img src="https://i.ibb.co/MyrKKWxG/Narojam-Fotos-24.jpg" alt="">
     <img src="https://i.ibb.co/xKXsZZV9/Narojam-Fotos-29.jpg" alt="">
     <img src="https://i.ibb.co/Z168jM9Y/Narojam-Fotos-31.jpg" alt="">
     <img src="https://i.ibb.co/4w3jD3qX/Narojam-Fotos-27.jpg" alt="">
+    
+    <img src="https://i.ibb.co/TxTF0vBR/Filarte-3-D-Demo-11.jpg" alt="">
+    <img src="https://i.ibb.co/mFXBDcHR/Filarte-3-D-Demo-08.jpg" alt="">
+    <img src="https://i.ibb.co/HTq8HLtH/Filarte-3-D-Demo-06.jpg" alt="">
+    <img src="https://i.ibb.co/398wfv8D/Filarte-3-D-Demo-03.jpg" alt="">
+    <img src="https://i.ibb.co/5xXMtpyf/Filarte-3-D-Demo-04.jpg" alt="">
+    <img src="https://i.ibb.co/DfVdH7pX/Filarte-3-D-Demo-01.jpg" alt="">
+    <img src="https://i.ibb.co/Zzcy6bLy/Filarte-3-D-Demo-02.jpg" alt="">
+    <img src="https://i.ibb.co/Sh8yHqv/Filarte-3-D-Demo-36.jpg" alt="">
+    <img src="https://i.ibb.co/Vc4VhpXP/Filarte-3-D-Demo-35.jpg" alt="">
+    <img src="https://i.ibb.co/RTRLsj9x/Filarte-3-D-Demo-32.jpg" alt="">
+    <img src="https://i.ibb.co/VWM5g3F8/Filarte-3-D-Demo-33.jpg" alt="">
+    <img src="https://i.ibb.co/20qCmWmj/Filarte-3-D-Demo-30.jpg" alt="">
+    <img src="https://i.ibb.co/x8m4Mjqm/Filarte-3-D-Demo-31.jpg" alt="">
+    <img src="https://i.ibb.co/ZR73nbSH/Filarte-3-D-Demo-29.jpg" alt="">
+    <img src="https://i.ibb.co/j9VTPsqy/Filarte-3-D-Demo-28.jpg" alt="">
+    <img src="https://i.ibb.co/W4G8F4Cq/Filarte-3-D-Demo-25.jpg" alt="">
+    <img src="https://i.ibb.co/7xkJ6Sb7/Filarte-3-D-Demo-24.jpg" alt="">
+    <img src="https://i.ibb.co/QvvJFj1T/Filarte-3-D-Demo-23.jpg" alt="">
+    <img src="https://i.ibb.co/sJtkV7vf/Filarte-3-D-Demo-21.jpg" alt="">
+    <img src="https://i.ibb.co/Rpd51szR/Filarte-3-D-Demo-22.jpg" alt="">
+    <img src="https://i.ibb.co/hNtfqRM/Filarte-3-D-Demo-19.jpg" alt="">
+    <img src="https://i.ibb.co/tMfsm64P/Filarte-3-D-Demo-20.jpg" alt="">
+    <img src="https://i.ibb.co/6R7YPR22/Filarte-3-D-Demo-18.jpg" alt="">
+    <img src="https://i.ibb.co/Nddfw4cR/Filarte-3-D-Demo-17.jpg" alt="">
+    <img src="https://i.ibb.co/kgj3LfzR/Filarte-3-D-Demo-15.jpg" alt="">
+    <img src="https://i.ibb.co/vCPt5QMn/Filarte-3-D-Demo-16.jpg" alt="">
+    <img src="https://i.ibb.co/0ymfb2ZF/Filarte-3-D-Demo-13.jpg" alt="">
+    <img src="https://i.ibb.co/Psx6yCGD/Filarte-3-D-Demo-14.jpg" alt="">
+    <img src="https://i.ibb.co/Wv8N3PJ8/Filarte-3-D-Demo-12.jpg" alt="">
+    <img src="https://i.ibb.co/mwQ71tG/Filarte-3-D-Demo-10.jpg" alt="">
+    <img src="https://i.ibb.co/RGvBDHLq/Filarte-3-D-Demo-09.jpg" alt="">
 
 </div>
 
