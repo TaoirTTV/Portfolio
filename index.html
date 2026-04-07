@@ -13,7 +13,8 @@
         /* --- VARIABLES & RESET --- */
         :root {
             --bg-color: #ffffff;
-            --bg-hero: #f4f4f4;
+            --bg-hero: #f4f4f4; /* Gris claro para el resto */
+            --bg-video-stack: #f4f4f4; /* Fondo negro para forzar barras horizontales */
             --text-color: #1a1a1a;
             --accent-color: #8c8c8c;
             --font-main: 'Manrope', sans-serif;
@@ -61,61 +62,47 @@
 
         .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.02em; text-transform: uppercase; }
 
-        /* --- HERO SECTION --- */
-        .hero {
+        /* --- SCROLL VIDEO SECTION (CANVAS FORZADO HORIZONTAL) --- */
+        .scroll-video-container {
+            height: 400vh; /* Define cuánto scroll hace falta para terminar la secuencia */
+            position: relative;
+            /* Usamos fondo negro aquí para que las barras (letterboxing) sean negras */
+            background-color: var(--bg-video-stack); 
+        }
+
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            width: 100%;
             height: 100vh;
-            padding: 0 5%;
             display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: flex-start;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
+            align-items: center;
             overflow: hidden;
-            background: var(--bg-hero);
         }
 
-        .parallax-layer {
-            will-change: transform;
-            position: relative;
-            z-index: 1;
+        #hero-lightpass {
+            /* Mantenemos el tamaño al 100% de la zona visible */
+            width: 100%;
+            height: 100%;
+            
+            /* --- EL CAMBIO CLAVE AQUÍ --- */
+            /* Antes usábamos 'cover' (rellenar recortando lados en vertical). 
+               Ahora usamos 'contain' (ajustar todo el video dentro de la pantalla sin recortar). 
+               Esto fuerza a que se vea entero en horizontal, añadiendo barras negras si la pantalla es vertical. */
+            object-fit: contain; 
         }
 
-        .hero-subtitle {
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            margin-bottom: 2rem;
-            color: var(--accent-color);
-            display: inline-block;
+        /* --- SECTIONS TITLES --- */
+        .section-title {
+            padding: 10vh 5% 2vh;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
-        .highlight-text {
-            display: block;
-            margin-left: 3rem;
-            font-style: italic;
-            color: #555;
-        }
-
-        /* FIX: No crecer infinito en pantallas muy grandes */
-        .hero-bg-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(200px, 25vw, 620px);
-            font-weight: 700;
-            color: #e6e6e6;
-            z-index: 0;
-            line-height: 0.8;
-            opacity: 0.4;
-            white-space: nowrap;
-        }
-
-        /* --- PORTFOLIO GRID --- */
+        /* --- PORTFOLIO GRID (VIDEOS) --- */
         .portfolio {
-            padding: 10vh 5%;
+            padding: 2vh 5% 10vh;
             max-width: 1600px;
             margin: 0 auto;
             display: grid;
@@ -138,7 +125,7 @@
             overflow: hidden;
             position: relative;
             background: #e5e5e5;
-            border-radius: 20px; /* ✔ MINIATURAS REDONDEADAS */
+            border-radius: 20px;
         }
 
         .ratio-horizontal { padding-bottom: 56.25%; }
@@ -195,6 +182,33 @@
         .project-title { font-size: 1.4rem; font-weight: 300; }
         .project-cat { font-size: 0.8rem; color: var(--accent-color); text-transform: uppercase; letter-spacing: 0.1em; }
 
+        /* --- GALLERY GRID (PHOTOS) --- */
+        .gallery-container {
+            padding: 2vh 5% 10vh;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 18px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .gallery img:hover {
+            transform: scale(1.02) !important;
+        }
+
         /* --- MODAL --- */
         .modal {
             position: fixed;
@@ -217,7 +231,7 @@
             max-width: 1400px;
             background: black;
             position: relative;
-            border-radius: 20px; /* ✔ VIDEO REDONDEADO */
+            border-radius: 20px;
             overflow: hidden;
         }
 
@@ -240,11 +254,10 @@
             font-size: 0.9rem;
         }
 
-        .reveal { opacity: 1; transform: translateY(0); }
+        .reveal { opacity: 1 !important; transform: translateY(0) !important; }
 
         @media (max-width: 768px) {
             .portfolio { grid-template-columns: 1fr; gap: 4rem; }
-            .highlight-text { margin-left: 0; }
         }
     </style>
 </head>
@@ -259,21 +272,13 @@
     </nav>
 </header>
 
-<section class="hero">
-    <div class="hero-bg-text parallax-layer" data-speed="-0.15">AITOR</div>
-
-    <div class="parallax-layer" data-speed="0.5">
-        <span class="hero-subtitle">Filmmaker & Editor</span>
-    </div>
-
-    <div class="parallax-layer" data-speed="0.25">
-        <h1>
-            Contando historias
-            <span class="highlight-text">visualmente.</span>
-        </h1>
+<section class="scroll-video-container">
+    <div class="sticky-wrapper">
+        <canvas id="hero-lightpass"></canvas>
     </div>
 </section>
-<h1 class="portfolio">Videos</h1>
+
+<h1 class="section-title">Videos</h1>
 <section class="portfolio">
     
     <article class="project-item" onclick="openModal('1141409089','vertical')">
@@ -308,208 +313,134 @@
             <span class="project-cat">Deporte / Horizontal</span>
         </div>
     </article>
+
     <article class="project-item" onclick="openYouTubeModal('sFR1WtoVAfs')">
-    <div class="thumb-container ratio-vertical">
-        <img 
-            src="https://img.youtube.com/vi/sFR1WtoVAfs/maxresdefault.jpg"
-            class="project-img"
-            alt="YouTube Short 1">
-        <div class="overlay">
-            <span class="play-btn">Ver Film</span>
+        <div class="thumb-container ratio-vertical">
+            <img src="https://img.youtube.com/vi/sFR1WtoVAfs/maxresdefault.jpg" class="project-img" alt="YouTube Short 1">
+            <div class="overlay"><span class="play-btn">Ver Film</span></div>
         </div>
-    </div>
-    <div class="project-info">
-        <h2 class="project-title">Sul Mare</h2>
-        <span class="project-cat">Vertical / Reel</span>
-    </div>
-</article>
-
-<article class="project-item" onclick="openYouTubeModal('srj63XebCds')">
-    <div class="thumb-container ratio-vertical">
-        <img 
-            src="https://img.youtube.com/vi/srj63XebCds/maxresdefault.jpg"
-            class="project-img"
-            alt="YouTube Short 2">
-        <div class="overlay">
-            <span class="play-btn">Ver Film</span>
+        <div class="project-info">
+            <h2 class="project-title">Sul Mare</h2>
+            <span class="project-cat">Vertical / Reel</span>
         </div>
-    </div>
-    <div class="project-info">
-        <h2 class="project-title">11.11 Restaurant</h2>
-        <span class="project-cat">Vertical / Reel</span>
-    </div>
-</article>
-<script>
-function openYouTubeModal(videoId) {
-    modal.classList.add('active');
+    </article>
 
-    // Forzar formato vertical 9:16
-    modalContainer.style.aspectRatio = '9 / 16';
-    modalContainer.style.height = '85vh';
-    modalContainer.style.width = 'auto';
-
-    modalContainer.innerHTML = `
-        <iframe
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1"
-            style="position:absolute;top:0;left:0;width:100%;height:100%;"
-            frameborder="0"
-            allow="autoplay; fullscreen; encrypted-media"
-            allowfullscreen>
-        </iframe>
-    `;
-}
-</script>
-
-    
-    
+    <article class="project-item" onclick="openYouTubeModal('srj63XebCds')">
+        <div class="thumb-container ratio-vertical">
+            <img src="https://img.youtube.com/vi/srj63XebCds/maxresdefault.jpg" class="project-img" alt="YouTube Short 2">
+            <div class="overlay"><span class="play-btn">Ver Film</span></div>
+        </div>
+        <div class="project-info">
+            <h2 class="project-title">11.11 Restaurant</h2>
+            <span class="project-cat">Vertical / Reel</span>
+        </div>
+    </article>
 
 </section>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galería</title>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background: #F4F4F4;
-            font-family: Arial, sans-serif;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 18px;
-        }
-
-        .gallery img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            display: block;
-        }
-    </style>
-</head>
-<body>
-
-<h1>Galería</h1>
-
-<div class="gallery">
-
-    <img src="https://i.ibb.co/32X2Cd3/PSX-20250830-040959.jpg" alt="">
-    <img src="https://i.ibb.co/1YtXB3K3/PSX-20250830-040645.jpg" alt="">
-    <img src="https://i.ibb.co/9HRXzRtr/PSX-20250830-042912.jpg" alt="">
-    <img src="https://i.ibb.co/tT0rHYcv/PSX-20250830-042614.jpg" alt="">
-    <img src="https://i.ibb.co/gFZfWV1j/PSX-20250830-042002.jpg" alt="">
-    <img src="https://i.ibb.co/TxgbZ88S/PSX-20250830-040335.jpg" alt="">
-    <img src="https://i.ibb.co/39vdxJZD/PSX-20250830-040019.jpg" alt="">
-    <img src="https://i.ibb.co/wZnM7m1Y/20251125-DSC6432.jpg" alt="">
-    <img src="https://i.ibb.co/V02JW1K1/20251125-DSC6427.jpg" alt="">
-    <img src="https://i.ibb.co/d0XK461H/20251125-DSC6398.jpg" alt="">
-    <img src="https://i.ibb.co/216ywZZg/DSC6193.jpg" alt="">
-    <img src="https://i.ibb.co/2YsWmWH4/DSC6177.jpg" alt="">
-    <img src="https://i.ibb.co/XT9yTQq/DSC6188.jpg" alt="">
-
-    <img src="https://i.ibb.co/wN20TXWS/Panetone-1.jpg" alt="">
-    <img src="https://i.ibb.co/yFcsgCTh/Panetone-2.jpg" alt="">
-    <img src="https://i.ibb.co/6084TD4D/Panetone-3.jpg" alt="">
-    <img src="https://i.ibb.co/fYR1fvBG/Panetone-4.jpg" alt="">
-    <img src="https://i.ibb.co/NQBPtBH/11-11-Demo-4.jpg" alt="">
-    <img src="https://i.ibb.co/Tq1pGr86/11-11-Demo-3.jpg" alt="">
-    
-    <img src="https://i.ibb.co/VW5zgrdG/11-11-Demo-5.jpg" alt="">
-    <img src="https://i.ibb.co/4nmj3Ht5/11-11-Demo-8.jpg" alt="">
-    <img src="https://i.ibb.co/jPWHP4vQ/11-11-Demo-6.jpg" alt="">
-    <img src="https://i.ibb.co/Hfw1pxMw/11-11-Demo-7.jpg" alt="">
-
-    <img src="https://i.ibb.co/WWXKLLLH/Narojam-Fotos-22.jpg" alt="">
-    <img src="https://i.ibb.co/MyrKKWxG/Narojam-Fotos-24.jpg" alt="">
-    <img src="https://i.ibb.co/xKXsZZV9/Narojam-Fotos-29.jpg" alt="">
-    <img src="https://i.ibb.co/Z168jM9Y/Narojam-Fotos-31.jpg" alt="">
-    <img src="https://i.ibb.co/4w3jD3qX/Narojam-Fotos-27.jpg" alt="">
-    
-    <img src="https://i.ibb.co/TxTF0vBR/Filarte-3-D-Demo-11.jpg" alt="">
-    <img src="https://i.ibb.co/mFXBDcHR/Filarte-3-D-Demo-08.jpg" alt="">
-    <img src="https://i.ibb.co/HTq8HLtH/Filarte-3-D-Demo-06.jpg" alt="">
-    <img src="https://i.ibb.co/398wfv8D/Filarte-3-D-Demo-03.jpg" alt="">
-    <img src="https://i.ibb.co/5xXMtpyf/Filarte-3-D-Demo-04.jpg" alt="">
-    <img src="https://i.ibb.co/DfVdH7pX/Filarte-3-D-Demo-01.jpg" alt="">
-    <img src="https://i.ibb.co/Zzcy6bLy/Filarte-3-D-Demo-02.jpg" alt="">
-    <img src="https://i.ibb.co/Sh8yHqv/Filarte-3-D-Demo-36.jpg" alt="">
-    <img src="https://i.ibb.co/Vc4VhpXP/Filarte-3-D-Demo-35.jpg" alt="">
-    <img src="https://i.ibb.co/RTRLsj9x/Filarte-3-D-Demo-32.jpg" alt="">
-    <img src="https://i.ibb.co/VWM5g3F8/Filarte-3-D-Demo-33.jpg" alt="">
-    <img src="https://i.ibb.co/20qCmWmj/Filarte-3-D-Demo-30.jpg" alt="">
-    <img src="https://i.ibb.co/x8m4Mjqm/Filarte-3-D-Demo-31.jpg" alt="">
-    <img src="https://i.ibb.co/ZR73nbSH/Filarte-3-D-Demo-29.jpg" alt="">
-    <img src="https://i.ibb.co/j9VTPsqy/Filarte-3-D-Demo-28.jpg" alt="">
-    <img src="https://i.ibb.co/W4G8F4Cq/Filarte-3-D-Demo-25.jpg" alt="">
-    <img src="https://i.ibb.co/7xkJ6Sb7/Filarte-3-D-Demo-24.jpg" alt="">
-    <img src="https://i.ibb.co/QvvJFj1T/Filarte-3-D-Demo-23.jpg" alt="">
-    <img src="https://i.ibb.co/sJtkV7vf/Filarte-3-D-Demo-21.jpg" alt="">
-    <img src="https://i.ibb.co/Rpd51szR/Filarte-3-D-Demo-22.jpg" alt="">
-    <img src="https://i.ibb.co/hNtfqRM/Filarte-3-D-Demo-19.jpg" alt="">
-    <img src="https://i.ibb.co/tMfsm64P/Filarte-3-D-Demo-20.jpg" alt="">
-    <img src="https://i.ibb.co/6R7YPR22/Filarte-3-D-Demo-18.jpg" alt="">
-    <img src="https://i.ibb.co/Nddfw4cR/Filarte-3-D-Demo-17.jpg" alt="">
-    <img src="https://i.ibb.co/kgj3LfzR/Filarte-3-D-Demo-15.jpg" alt="">
-    <img src="https://i.ibb.co/vCPt5QMn/Filarte-3-D-Demo-16.jpg" alt="">
-    <img src="https://i.ibb.co/0ymfb2ZF/Filarte-3-D-Demo-13.jpg" alt="">
-    <img src="https://i.ibb.co/Psx6yCGD/Filarte-3-D-Demo-14.jpg" alt="">
-    <img src="https://i.ibb.co/Wv8N3PJ8/Filarte-3-D-Demo-12.jpg" alt="">
-    <img src="https://i.ibb.co/mwQ71tG/Filarte-3-D-Demo-10.jpg" alt="">
-    <img src="https://i.ibb.co/RGvBDHLq/Filarte-3-D-Demo-09.jpg" alt="">
-
-</div>
-
-</body>
-</html>
-
+<h1 class="section-title">Galería</h1>
+<section class="gallery-container">
+    <div class="gallery">
+        <img class="reveal-item" src="https://i.ibb.co/32X2Cd3/PSX-20250830-040959.jpg" alt="">
+        <img class="reveal-item" src="https://i.ibb.co/1YtXB3K3/PSX-20250830-040645.jpg" alt="">
+        <img class="reveal-item" src="https://i.ibb.co/9HRXzRtr/PSX-20250830-042912.jpg" alt="">
+        </div>
+</section>
 
 <footer>
     <p>&copy; 2025 Aitor Cavero.</p>
 </footer>
 
-<!-- MODAL -->
 <div class="modal" id="videoModal">
     <div class="close-modal" onclick="closeModal()">CERRAR ✕</div>
     <div class="video-container" id="modalContainer"></div>
 </div>
 
 <script>
-/* --- PARALLAX --- */
-window.addEventListener('scroll', () => {
-    const scrollY = window.pageYOffset;
-    const layers = document.querySelectorAll('.parallax-layer');
+/* --- LÓGICA DE SECUENCIA DE IMÁGENES (ALTO RENDIMIENTO) --- */
+const canvas = document.getElementById("hero-lightpass");
+const context = canvas.getContext("2d");
+const container = document.querySelector(".scroll-video-container");
 
-    layers.forEach(layer => {
-        const speed = layer.getAttribute('data-speed');
-        if (scrollY < window.innerHeight * 1.5) {
-            layer.style.transform = `translateY(${scrollY * speed}px)`;
-        }
-    });
+// Ajustado a 720p exactos (formato horizontal 16:9)
+canvas.width = 1280; 
+canvas.height = 720;
+
+// Total de fotogramas (811)
+const frameCount = 811; 
+const images = [];
+
+// 1. PRECARGA DE IMÁGENES
+for (let i = 1; i <= frameCount; i++) {
+    const img = new Image();
+    // Ruta hacia tus archivos generados con FFMPEG en formato .webp
+    img.src = `img/frame_${i.toString().padStart(3, '0')}.webp`;
+    images.push(img);
+
+    if (i === 1) {
+        img.onload = () => {
+            // Dibujamos el primer frame en cuanto cargue
+            context.drawImage(images[0], 0, 0, canvas.width, canvas.height);
+        };
+    }
+}
+
+// Variables para inercia (suavizado)
+let currentIndex = 0;
+let targetIndex = 0;
+
+// 2. DETECCIÓN DE SCROLL
+window.addEventListener('scroll', () => {
+    // Calculamos cuánto ha avanzado el scroll dentro del contenedor de video
+    const sectionTop = container.offsetTop;
+    const walk = container.scrollHeight - window.innerHeight;
+    
+    let scrollFraction = (window.scrollY - sectionTop) / walk;
+    
+    // Limitamos entre 0 y 1
+    if (scrollFraction < 0) scrollFraction = 0;
+    if (scrollFraction > 1) scrollFraction = 1;
+
+    // Asignamos el frame objetivo al que queremos llegar
+    targetIndex = scrollFraction * (frameCount - 1);
 });
 
-/* --- APPEAR ON SCROLL --- */
+// 3. MOTOR DE RENDERIZADO (Loop continuo a 60fps)
+function updateCanvas() {
+    // Aplicamos inercia suave (currentIndex se acerca a targetIndex un 10% cada frame)
+    currentIndex += (targetIndex - currentIndex) * 0.1;
+    
+    // Redondeamos para obtener un índice de array válido
+    const drawIndex = Math.round(currentIndex);
+
+    // Si la imagen existe y está cargada en memoria, la pintamos
+    if (images[drawIndex] && images[drawIndex].complete) {
+        context.drawImage(images[drawIndex], 0, 0, canvas.width, canvas.height);
+    }
+
+    // Solicitamos el siguiente frame de animación
+    requestAnimationFrame(updateCanvas);
+}
+
+// Arrancamos el loop del motor
+updateCanvas();
+
+/* --- APPEAR ON SCROLL (EFECTO REVEAL PARA ELEMENTOS) --- */
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('reveal');
     });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.project-item').forEach(item => observer.observe(item));
+document.querySelectorAll('.project-item, .reveal-item').forEach(item => observer.observe(item));
 
-
-/* --- MODAL VIDEO --- */
+/* --- MODALES DE VIDEO (VIMEO Y YOUTUBE) --- */
 const modal = document.getElementById('videoModal');
 const modalContainer = document.getElementById('modalContainer');
 
 function openModal(vimeoId, format) {
     modal.classList.add('active');
-
+    // Ajustamos el tamaño del modal según si el video es vertical u horizontal
     if (format === 'vertical') {
         modalContainer.style.aspectRatio = '9/16';
         modalContainer.style.height = '85vh';
@@ -519,41 +450,46 @@ function openModal(vimeoId, format) {
         modalContainer.style.width = '80%';
         modalContainer.style.height = 'auto';
     }
+    // Insertamos el iframe de Vimeo
+    modalContainer.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&color=ffffff&title=0&byline=0&portrait=0" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+}
 
-    modalContainer.innerHTML = `
-        <iframe 
-            src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&color=ffffff&title=0&byline=0&portrait=0"
-            style="position:absolute;top:0;left:0;width:100%;height:100%;" 
-            frameborder="0" allow="autoplay; fullscreen" allowfullscreen>
-        </iframe>`;
+function openYouTubeModal(videoId) {
+    modal.classList.add('active');
+    // Los shorts de YouTube son siempre verticales
+    modalContainer.style.aspectRatio = '9/16';
+    modalContainer.style.height = '85vh';
+    modalContainer.style.width = 'auto';
+    // Insertamos el iframe de YouTube
+    modalContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
 }
 
 function closeModal() {
     modal.classList.remove('active');
+    // Vaciamos el contenedor después de la animación de cierre para detener el video
     setTimeout(() => { modalContainer.innerHTML = ''; }, 400);
 }
 
+// Cerrar al hacer click fuera del contenedor del video
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-
-/* --- LOAD REAL VIMEO THUMBNAILS --- */
+/* --- CARGAR THUMBNAILS DE VIMEO DINÁMICAMENTE --- */
 async function loadVimeoThumbs() {
     const imgs = document.querySelectorAll('[data-vimeo-id]');
-
     imgs.forEach(async img => {
         const id = img.getAttribute('data-vimeo-id');
-        const url = `https://vimeo.com/api/v2/video/${id}.json`;
-
         try {
-            const res = await fetch(url);
+            // Llamada a la API pública de Vimeo para obtener datos del video
+            const res = await fetch(`https://vimeo.com/api/v2/video/${id}.json`);
             const data = await res.json();
+            // Asignamos la imagen miniatura grande
             img.src = data[0].thumbnail_large;
-        } catch (err) {
-            console.error("Error cargando miniatura de Vimeo:", err);
+        } catch (err) { 
+            console.error("Error cargando thumbnail de Vimeo", err);
         }
     });
 }
-
+// Ejecutamos la carga de miniaturas al inicio
 loadVimeoThumbs();
 </script>
 
