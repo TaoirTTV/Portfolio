@@ -64,7 +64,7 @@
 
         /* --- SCROLL VIDEO SECTION (CANVAS HÍBRIDO) --- */
         .scroll-video-container {
-            height: 400vh; /* Define cuánto scroll hace falta para terminar la secuencia */
+            height: 1000vh; /* Pista mucho más larga para que el avance general sea más lento */
             position: relative;
             background-color: var(--bg-video-stack); 
         }
@@ -451,26 +451,34 @@ for (let i = 1; i <= frameCount; i++) {
 let currentIndex = 0;
 let targetIndex = 0;
 
-// 2. DETECCIÓN DE SCROLL
+// 2. DETECCIÓN DE SCROLL (CON VELOCIDAD VARIABLE)
 window.addEventListener('scroll', () => {
-    // Calculamos cuánto ha avanzado el scroll dentro del contenedor de video
     const sectionTop = container.offsetTop;
     const walk = container.scrollHeight - window.innerHeight;
     
     let scrollFraction = (window.scrollY - sectionTop) / walk;
-    
-    // Limitamos entre 0 y 1
     if (scrollFraction < 0) scrollFraction = 0;
     if (scrollFraction > 1) scrollFraction = 1;
 
-    // Asignamos el frame objetivo al que queremos llegar
-    targetIndex = scrollFraction * (frameCount - 1);
+    // --- CONFIGURACIÓN DE LAS VELOCIDADES ---
+    const slowFrameStart = 710; // A partir de aquí frena en seco
+    const scrollSplitPoint = 0.5; // Gasta el 50% del recorrido para llegar al frame 710, y el otro 50% solo para los últimos 100 frames.
+
+    if (scrollFraction <= scrollSplitPoint) {
+        // FASE 1: RÁPIDA (Fotogramas 0 a 710)
+        let phaseFraction = scrollFraction / scrollSplitPoint;
+        targetIndex = phaseFraction * slowFrameStart;
+    } else {
+        // FASE 2: LENTA (Fotogramas 710 hasta el 811)
+        let phaseFraction = (scrollFraction - scrollSplitPoint) / (1 - scrollSplitPoint);
+        targetIndex = slowFrameStart + phaseFraction * (frameCount - 1 - slowFrameStart);
+    }
 });
 
 // 3. MOTOR DE RENDERIZADO (Loop continuo a 60fps)
 function updateCanvas() {
-    // Aplicamos inercia suave (currentIndex se acerca a targetIndex un 10% cada frame)
-    currentIndex += (targetIndex - currentIndex) * 0.1;
+    // Inercia más elástica para absorber tirones de trackpad o móvil
+    currentIndex += (targetIndex - currentIndex) * 0.04;
     
     // Redondeamos para obtener un índice de array válido
     const drawIndex = Math.round(currentIndex);
