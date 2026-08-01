@@ -13,19 +13,23 @@
         /* --- VARIABLES & RESET --- */
         :root {
             --bg-color: #ffffff;
-            --bg-hero: #f4f4f4; 
-            --bg-video-stack: #f4f4f4; /* Color de fondo para cuando aparezcan las barras (letterboxing) */
-            --text-color: #1a1a1a;
-            --accent-color: #8c8c8c;
+            --bg-video-stack: #f8f9fa; 
+            --text-main: #111111;
+            --text-muted: #777777;
+            --accent-color: #4353ff; 
+            --shadow-subtle: 0 12px 30px rgba(0, 0, 0, 0.05);
+            --shadow-colored: 0 20px 40px rgba(67, 83, 255, 0.15); 
+            --radius-lg: 20px;
+            --radius-md: 12px;
             --font-main: 'Manrope', sans-serif;
-            --transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            --transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-main);
             font-family: var(--font-main);
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
@@ -33,18 +37,22 @@
 
         /* --- TYPOGRAPHY --- */
         h1 { 
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(3rem, 7vw, 5.5rem);
             font-weight: 300; 
             letter-spacing: -0.04em; 
             line-height: 1.1;
-            color: #1a1a1a;
         }
         
-        h2 { font-size: 1.5rem; font-weight: 500; }
-        p { font-size: 1rem; color: var(--accent-color); line-height: 1.6; }
+        h1::after {
+            content: '.';
+            color: var(--accent-color);
+        }
+        
+        h2 { font-size: 1.4rem; font-weight: 500; letter-spacing: -0.01em; }
+        p { font-size: 1rem; color: var(--text-muted); line-height: 1.6; }
         
         a { text-decoration: none; color: inherit; transition: var(--transition); }
-        a:hover { opacity: 0.5; }
+        a:hover { color: var(--accent-color); }
 
         /* --- HEADER --- */
         header {
@@ -57,14 +65,17 @@
             width: 100%;
             z-index: 100;
             mix-blend-mode: difference;
-            color: white;
+            color: white; 
         }
 
-        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.02em; text-transform: uppercase; }
+        .logo { font-weight: 700; font-size: 1.1rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        
+        nav ul { list-style: none; }
+        nav a { font-weight: 500; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
-        /* --- SCROLL VIDEO SECTION (CANVAS HÍBRIDO) --- */
+        /* --- SCROLL VIDEO SECTION --- */
         .scroll-video-container {
-            height: 1000vh; /* Pista mucho más larga para que el avance general sea más lento */
+            height: 1000vh;
             position: relative;
             background-color: var(--bg-video-stack); 
         }
@@ -83,32 +94,28 @@
         #hero-lightpass {
             width: 100%;
             height: 100%;
-            /* Por defecto (ordenadores): llena la pantalla y "se come" el margen para evitar franjas laterales */
             object-fit: cover; 
         }
 
-        /* Si detecta que la pantalla es vertical (móviles), fuerza el formato con barras arriba y abajo */
         @media (orientation: portrait) {
-            #hero-lightpass {
-                object-fit: contain; 
-            }
+            #hero-lightpass { object-fit: contain; }
         }
 
         /* --- SECTIONS TITLES --- */
         .section-title {
-            padding: 10vh 5% 2vh;
+            padding: 12vh 5% 4vh;
             max-width: 1600px;
             margin: 0 auto;
         }
 
         /* --- PORTFOLIO GRID (VIDEOS) --- */
         .portfolio {
-            padding: 2vh 5% 10vh;
+            padding: 0 5% 10vh;
             max-width: 1600px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
-            gap: 6rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
+            gap: 3.5rem; 
             position: relative;
             z-index: 10;
         }
@@ -117,7 +124,7 @@
             position: relative;
             cursor: pointer;
             opacity: 0;
-            transform: translateY(50px);
+            transform: translateY(40px);
             transition: var(--transition);
         }
 
@@ -125,8 +132,11 @@
             width: 100%;
             overflow: hidden;
             position: relative;
-            background: #e5e5e5;
-            border-radius: 20px;
+            background: #e9ecef;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-subtle);
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.03);
         }
 
         .ratio-horizontal { padding-bottom: 56.25%; }
@@ -134,18 +144,10 @@
 
         .project-img {
             position: absolute;
-            top: 0; 
-            left: 0;
-            width: 100%; 
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             object-fit: cover;
             transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-            filter: grayscale(100%);
-        }
-
-        .project-item:hover .project-img {
-            transform: scale(1.05);
-            filter: grayscale(0%);
         }
 
         .overlay {
@@ -155,59 +157,82 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.2);
             opacity: 0;
             transition: var(--transition);
         }
 
         .play-btn {
-            color: #1a1a1a;
-            font-size: 0.9rem;
+            color: var(--text-main);
+            font-size: 0.85rem;
             font-weight: 700;
-            background: #ffffff;
-            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 1rem 2.2rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: var(--transition);
         }
 
+        .project-item:hover .thumb-container {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-colored);
+            border-color: rgba(67, 83, 255, 0.1);
+        }
+        
+        .project-item:hover .project-img { transform: scale(1.04); }
         .project-item:hover .overlay { opacity: 1; }
+        .project-item:hover .play-btn { 
+            background: #ffffff; 
+            color: var(--accent-color); 
+        }
 
         .project-info {
-            margin-top: 2rem;
+            margin-top: 1.5rem;
             display: flex;
-            justify-content: space-between;
-            align-items: baseline;
+            flex-direction: column;
+            gap: 0.3rem;
         }
 
-        .project-title { font-size: 1.4rem; font-weight: 300; }
-        .project-cat { font-size: 0.8rem; color: var(--accent-color); text-transform: uppercase; letter-spacing: 0.1em; }
+        .project-cat { 
+            font-size: 0.75rem; 
+            color: var(--accent-color); 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em; 
+        }
 
-        /* --- GALLERY GRID (PHOTOS) --- */
+        /* --- GALLERY MASONRY --- */
         .gallery-container {
-            padding: 2vh 5% 10vh;
+            padding: 0 5% 10vh;
             max-width: 1600px;
             margin: 0 auto;
         }
 
         .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 18px;
+            column-count: 3;
+            column-gap: 1.5rem;
         }
 
         .gallery img {
             width: 100%;
             height: auto;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem; 
             display: block;
             transition: var(--transition);
             opacity: 0;
             transform: translateY(30px);
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid rgba(0,0,0,0.03);
+            break-inside: avoid; 
         }
 
         .gallery img:hover {
-            transform: scale(1.02) !important;
+            transform: translateY(-5px) scale(1.01) !important;
+            box-shadow: var(--shadow-colored);
         }
 
         /* --- MODAL --- */
@@ -215,14 +240,15 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
             z-index: 2000;
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.4s ease;
         }
 
         .modal.active { opacity: 1; pointer-events: all; }
@@ -230,45 +256,58 @@
         .video-container {
             width: 80%;
             max-width: 1400px;
-            background: black;
+            background: #000;
             position: relative;
-            border-radius: 20px;
+            border-radius: var(--radius-lg);
             overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.2);
         }
 
         .close-modal {
             position: absolute;
-            top: 2rem; right: 2rem;
-            font-size: 1rem;
+            top: 2rem; right: 2.5rem;
+            font-size: 0.85rem;
             cursor: pointer;
-            color: #1a1a1a;
+            color: var(--text-main);
             z-index: 2001;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             font-weight: 700;
+            background: rgba(0,0,0,0.05);
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover { 
+            background: var(--accent-color); 
+            color: #ffffff; 
         }
 
         footer {
-            padding: 8rem 5% 4rem;
+            padding: 4rem 5% 4rem;
             text-align: center;
-            color: var(--accent-color);
-            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .reveal { opacity: 1 !important; transform: translateY(0) !important; }
 
+        @media (max-width: 1024px) { .gallery { column-count: 2; } }
         @media (max-width: 768px) {
-            .portfolio { grid-template-columns: 1fr; gap: 4rem; }
+            .portfolio { grid-template-columns: 1fr; gap: 3rem; }
+            .gallery { column-count: 1; }
         }
     </style>
 </head>
 <body>
 
 <header id="mainHeader">
-    <div class="logo">AITOR CAVERO</div>
+    <div class="logo">Aitor Cavero</div>
     <nav>
         <ul>
-            <li><a href="https://wa.link/gv2l3m">CONTACTO</a></li>
+            <li><a href="https://wa.link/gv2l3m">Contacto</a></li>
         </ul>
     </nav>
 </header>
@@ -281,51 +320,20 @@
 
 <h1 class="section-title">Videos</h1>
 <section class="portfolio">
-    
-    <article class="project-item" onclick="openModal('1141409089','vertical')">
+
+    <!-- NUEVO REEL INSTAGRAM -->
+    <article class="project-item" onclick="openInstagramModal('DaBKbwwMpcR')">
         <div class="thumb-container ratio-vertical">
-            <img data-vimeo-id="1141409089" class="project-img" alt="Video Vertical">
-            <div class="overlay"><span class="play-btn">Ver Film</span></div>
+            <!-- 👇 CAMBIA ESTA URL POR LA MINIATURA QUE QUIERAS USAR PARA EL REEL 👇 -->
+            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=720&h=1280&fit=crop" class="project-img" alt="Reel Festa Major">
+            <div class="overlay"><span class="play-btn">Ver Reel</span></div>
         </div>
         <div class="project-info">
-            <h2 class="project-title">Campaña Privada</h2>
-            <span class="project-cat">Próximo Lanzamiento / Vertical</span>
-        </div>
-    </article>
-
-    <article class="project-item" onclick="openModal('1141420793','horizontal')">
-        <div class="thumb-container ratio-horizontal">
-            <img data-vimeo-id="1141420793" class="project-img" alt="Video Horizontal 2">
-            <div class="overlay"><span class="play-btn">Ver Film</span></div>
-        </div>
-        <div class="project-info">
-            <h2 class="project-title">Atleta Calistenia Freestyle</h2>
-            <span class="project-cat">Deporte / Horizontal</span>
-        </div>
-    </article>
-
-    <article class="project-item" onclick="openModal('1141421644','horizontal')">
-        <div class="thumb-container ratio-horizontal">
-            <img data-vimeo-id="1141421644" class="project-img" alt="Video Horizontal 3">
-            <div class="overlay"><span class="play-btn">Ver Film</span></div>
-        </div>
-        <div class="project-info">
-            <h2 class="project-title">Sesión Entrenamiento Urbano</h2>
-            <span class="project-cat">Deporte / Horizontal</span>
-        </div>
-    </article>
-
-    <article class="project-item" onclick="openYouTubeModal('sFR1WtoVAfs')">
-        <div class="thumb-container ratio-vertical">
-            <img src="https://img.youtube.com/vi/sFR1WtoVAfs/maxresdefault.jpg" class="project-img" alt="YouTube Short 1">
-            <div class="overlay"><span class="play-btn">Ver Film</span></div>
-        </div>
-        <div class="project-info">
-            <h2 class="project-title">Sul Mare</h2>
+            <h2 class="project-title">Festa Major La Selva del Camp</h2>
             <span class="project-cat">Vertical / Reel</span>
         </div>
     </article>
-
+    
     <article class="project-item" onclick="openYouTubeModal('srj63XebCds')">
         <div class="thumb-container ratio-vertical">
             <img src="https://img.youtube.com/vi/srj63XebCds/maxresdefault.jpg" class="project-img" alt="YouTube Short 2">
@@ -342,56 +350,57 @@
 <h1 class="section-title">Galería</h1>
 <section class="gallery-container">
     <div class="gallery">
-        <img class="reveal-item" src="https://i.ibb.co/32X2Cd3/PSX-20250830-040959.jpg" alt="">
-        <img class="reveal-item" src="https://i.ibb.co/1YtXB3K3/PSX-20250830-040645.jpg" alt="">
-        <img class="reveal-item" src="https://i.ibb.co/9HRXzRtr/PSX-20250830-042912.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/tT0rHYcv/PSX-20250830-042614.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/gFZfWV1j/PSX-20250830-042002.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/TxgbZ88S/PSX-20250830-040335.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/39vdxJZD/PSX-20250830-040019.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/wZnM7m1Y/20251125-DSC6432.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/V02JW1K1/20251125-DSC6427.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/d0XK461H/20251125-DSC6398.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/Xr7cj9sg/DSC00064-2.jpg">
-    <img class="reveal-item" src="https://i.ibb.co/q3Ftfw27/DSC3310.jpg">
-    <img class="reveal-item" src="https://i.ibb.co/dsm0Wprw/DSC00048.jpg">
+        <img id="foto-1" class="reveal-item" src="https://i.ibb.co/32X2Cd3/PSX-20250830-040959.jpg" alt="">
+        <img id="foto-2" class="reveal-item" src="https://i.ibb.co/1YtXB3K3/PSX-20250830-040645.jpg" alt="">
+        <img id="foto-3" class="reveal-item" src="https://i.ibb.co/9HRXzRtr/PSX-20250830-042912.jpg" alt="">
+        <img id="foto-4" class="reveal-item" src="https://i.ibb.co/tT0rHYcv/PSX-20250830-042614.jpg" alt="">
+        <img id="foto-5" class="reveal-item" src="https://i.ibb.co/gFZfWV1j/PSX-20250830-042002.jpg" alt="">
+        <img id="foto-6" class="reveal-item" src="https://i.ibb.co/TxgbZ88S/PSX-20250830-040335.jpg" alt="">
+        <img id="foto-7" class="reveal-item" src="https://i.ibb.co/39vdxJZD/PSX-20250830-040019.jpg" alt="">
+        <img id="foto-8" class="reveal-item" src="https://i.ibb.co/wZnM7m1Y/20251125-DSC6432.jpg" alt="">
+        <img id="foto-9" class="reveal-item" src="https://i.ibb.co/V02JW1K1/20251125-DSC6427.jpg" alt="">
+        <img id="foto-10" class="reveal-item" src="https://i.ibb.co/d0XK461H/20251125-DSC6398.jpg" alt="">
+        <img id="foto-11" class="reveal-item" src="https://i.ibb.co/Xr7cj9sg/DSC00064-2.jpg" alt="">
+        <img id="foto-12" class="reveal-item" src="https://i.ibb.co/q3Ftfw27/DSC3310.jpg" alt="">
+        <img id="foto-13" class="reveal-item" src="https://i.ibb.co/dsm0Wprw/DSC00048.jpg" alt="">
+        
+        <img id="foto-14" class="reveal-item" src="https://i.ibb.co/Dsp3d8Y/DSC0210.jpg" alt="">
+        <img id="foto-15" class="reveal-item" src="https://i.ibb.co/Pv63GDZF/DSC4270.jpg" alt="">
+        <img id="foto-16" class="reveal-item" src="https://i.ibb.co/B2zHyrWJ/DSC9129.jpg" alt="">
+        <img id="foto-17" class="reveal-item" src="https://i.ibb.co/Dg6w42Y5/DSC4030.jpg" alt="">
+        <img id="foto-18" class="reveal-item" src="https://i.ibb.co/kR4sK3X/DSC4065.jpg" alt="">
+        <img id="foto-19" class="reveal-item" src="https://i.ibb.co/Z6Hhd18f/DSC4209.jpg" alt="">
+        <img id="foto-20" class="reveal-item" src="https://i.ibb.co/qYhFFcm0/DSC9777.jpg" alt="">
+        <img id="foto-21" class="reveal-item" src="https://i.ibb.co/b5RwP0pJ/DSC5152.jpg" alt="">
+        <img id="foto-22" class="reveal-item" src="https://i.ibb.co/mV36wCMJ/DSC5102.jpg" alt="">
+        <img id="foto-23" class="reveal-item" src="https://i.ibb.co/Lhn5fzHp/DSC5014.jpg" alt="">
+        <img id="foto-24" class="reveal-item" src="https://i.ibb.co/PGhRwCy8/DSC5000.jpg" alt="">
+        <img id="foto-25" class="reveal-item" src="https://i.ibb.co/Qv86hvqQ/DSC4977.jpg" alt="">
+        <img id="foto-26" class="reveal-item" src="https://i.ibb.co/S4L4fZqX/DSC4967.jpg" alt="">
+        <img id="foto-27" class="reveal-item" src="https://i.ibb.co/mVs28DJ3/DSC4856.jpg" alt="">
+        <img id="foto-28" class="reveal-item" src="https://i.ibb.co/VcHRsyRH/DSC5003.jpg" alt="">
+        <img id="foto-29" class="reveal-item" src="https://i.ibb.co/NdWTPBrP/DSC4815.jpg" alt="">
+        <img id="foto-30" class="reveal-item" src="https://i.ibb.co/Y4bqnCqw/DSC0221.jpg" alt="">
+    </div>
+</section>
 
-    <img class="reveal-item" src="https://i.ibb.co/J6NfrR0/DSC0648.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/C5Z6M424/DSC0545.jpg" alt="">
-<img class="reveal-item" src="https://i.ibb.co/NbSqRWd/DSC0559.jpg" alt="">
-<img class="reveal-item" src="https://i.ibb.co/ycRQB9yp/DSC0630.jpg" alt="">
-<img class="reveal-item" src="https://i.ibb.co/vvsSqmLb/DSC0739.jpg" alt="">
-<img class="reveal-item" src="https://i.ibb.co/HpKsS3CP/DSC0741.jpg" alt="">
-<img class="reveal-item" src="https://i.ibb.co/3y2DYFbd/DSC0742.jpg" alt="">
-<img class="reveal-item" src="https://i.ibb.co/5XWZMFPq/DSC0886.jpg" alt="">
-
-
-    <img class="reveal-item" src="https://i.ibb.co/wN20TXWS/Panetone-1.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/yFcsgCTh/Panetone-2.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/6084TD4D/Panetone-3.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/fYR1fvBG/Panetone-4.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/NQBPtBH/11-11-Demo-4.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/Tq1pGr86/11-11-Demo-3.jpg" alt="">
-    
-    <img class="reveal-item" src="https://i.ibb.co/VW5zgrdG/11-11-Demo-5.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/4nmj3Ht5/11-11-Demo-8.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/jPWHP4vQ/11-11-Demo-6.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/Hfw1pxMw/11-11-Demo-7.jpg" alt="">
-
-    <img class="reveal-item" src="https://i.ibb.co/WWXKLLLH/Narojam-Fotos-22.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/MyrKKWxG/Narojam-Fotos-24.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/xKXsZZV9/Narojam-Fotos-29.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/Z168jM9Y/Narojam-Fotos-31.jpg" alt="">
-    <img class="reveal-item" src="https://i.ibb.co/4w3jD3qX/Narojam-Fotos-27.jpg" alt="">
-    
-    
-    
-
-        </div>
+<!-- NUEVA SECCIÓN DE AUTOMOCIÓN -->
+<h1 class="section-title">Automoción</h1>
+<section class="gallery-container">
+    <div class="gallery">
+        <img id="foto-31" class="reveal-item" src="https://i.ibb.co/J6NfrR0/DSC0648.jpg" alt="">
+        <img id="foto-32" class="reveal-item" src="https://i.ibb.co/C5Z6M424/DSC0545.jpg" alt="">
+        <img id="foto-33" class="reveal-item" src="https://i.ibb.co/NbSqRWd/DSC0559.jpg" alt="">
+        <img id="foto-34" class="reveal-item" src="https://i.ibb.co/ycRQB9yp/DSC0630.jpg" alt="">
+        <img id="foto-35" class="reveal-item" src="https://i.ibb.co/vvsSqmLb/DSC0739.jpg" alt="">
+        <img id="foto-36" class="reveal-item" src="https://i.ibb.co/HpKsS3CP/DSC0741.jpg" alt="">
+        <img id="foto-37" class="reveal-item" src="https://i.ibb.co/3y2DYFbd/DSC0742.jpg" alt="">
+        <img id="foto-38" class="reveal-item" src="https://i.ibb.co/5XWZMFPq/DSC0886.jpg" alt="">
+    </div>
 </section>
 
 <footer>
-    <p>&copy; 2025 Aitor Cavero.</p>
+    <p>&copy; 2026 Aitor Cavero.</p>
 </footer>
 
 <div class="modal" id="videoModal">
@@ -400,39 +409,32 @@
 </div>
 
 <script>
-/* --- LÓGICA DE SECUENCIA DE IMÁGENES (ALTO RENDIMIENTO) --- */
+/* --- LÓGICA DE SECUENCIA DE IMÁGENES --- */
 const canvas = document.getElementById("hero-lightpass");
 const context = canvas.getContext("2d");
 const container = document.querySelector(".scroll-video-container");
 
-// Ajustado a la resolución de tu exportación (720p 16:9)
 canvas.width = 1280; 
 canvas.height = 720;
 
-// Total de fotogramas
 const frameCount = 811; 
 const images = [];
 
-// 1. PRECARGA DE IMÁGENES
 for (let i = 1; i <= frameCount; i++) {
     const img = new Image();
-    // Ruta hacia tus archivos generados con FFMPEG en formato .webp
     img.src = `img/frame_${i.toString().padStart(3, '0')}.webp`;
     images.push(img);
 
     if (i === 1) {
         img.onload = () => {
-            // Dibujamos el primer frame en cuanto cargue
             context.drawImage(images[0], 0, 0, canvas.width, canvas.height);
         };
     }
 }
 
-// Variables para inercia (suavizado)
 let currentIndex = 0;
 let targetIndex = 0;
 
-// 2. DETECCIÓN DE SCROLL (CON VELOCIDAD VARIABLE)
 window.addEventListener('scroll', () => {
     const sectionTop = container.offsetTop;
     const walk = container.scrollHeight - window.innerHeight;
@@ -441,42 +443,30 @@ window.addEventListener('scroll', () => {
     if (scrollFraction < 0) scrollFraction = 0;
     if (scrollFraction > 1) scrollFraction = 1;
 
-    // --- CONFIGURACIÓN DE LAS VELOCIDADES ---
-    const slowFrameStart = 710; // A partir de aquí frena en seco
-    const scrollSplitPoint = 0.5; // Gasta el 50% del recorrido para llegar al frame 710, y el otro 50% solo para los últimos 100 frames.
+    const slowFrameStart = 710; 
+    const scrollSplitPoint = 0.5; 
 
     if (scrollFraction <= scrollSplitPoint) {
-        // FASE 1: RÁPIDA (Fotogramas 0 a 710)
         let phaseFraction = scrollFraction / scrollSplitPoint;
         targetIndex = phaseFraction * slowFrameStart;
     } else {
-        // FASE 2: LENTA (Fotogramas 710 hasta el 811)
         let phaseFraction = (scrollFraction - scrollSplitPoint) / (1 - scrollSplitPoint);
         targetIndex = slowFrameStart + phaseFraction * (frameCount - 1 - slowFrameStart);
     }
 });
 
-// 3. MOTOR DE RENDERIZADO (Loop continuo a 60fps)
 function updateCanvas() {
-    // Inercia más elástica para absorber tirones de trackpad o móvil
     currentIndex += (targetIndex - currentIndex) * 0.04;
-    
-    // Redondeamos para obtener un índice de array válido
     const drawIndex = Math.round(currentIndex);
 
-    // Si la imagen existe y está cargada en memoria, la pintamos
     if (images[drawIndex] && images[drawIndex].complete) {
         context.drawImage(images[drawIndex], 0, 0, canvas.width, canvas.height);
     }
-
-    // Solicitamos el siguiente frame de animación
     requestAnimationFrame(updateCanvas);
 }
-
-// Arrancamos el loop del motor
 updateCanvas();
 
-/* --- APPEAR ON SCROLL (EFECTO REVEAL PARA ELEMENTOS) --- */
+/* --- APPEAR ON SCROLL --- */
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('reveal');
@@ -485,13 +475,13 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.project-item, .reveal-item').forEach(item => observer.observe(item));
 
-/* --- MODALES DE VIDEO (VIMEO Y YOUTUBE) --- */
+/* --- MODALES DE VIDEO --- */
 const modal = document.getElementById('videoModal');
 const modalContainer = document.getElementById('modalContainer');
 
+// Modal para Vimeo
 function openModal(vimeoId, format) {
     modal.classList.add('active');
-    // Ajustamos el tamaño del modal según si el video es vertical u horizontal
     if (format === 'vertical') {
         modalContainer.style.aspectRatio = '9/16';
         modalContainer.style.height = '85vh';
@@ -501,46 +491,52 @@ function openModal(vimeoId, format) {
         modalContainer.style.width = '80%';
         modalContainer.style.height = 'auto';
     }
-    // Insertamos el iframe de Vimeo
-    modalContainer.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&color=ffffff&title=0&byline=0&portrait=0" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    modalContainer.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&color=4353ff&title=0&byline=0&portrait=0" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
 }
 
+// Modal para YouTube Shorts / Videos
 function openYouTubeModal(videoId) {
     modal.classList.add('active');
-    // Los shorts de YouTube son siempre verticales
     modalContainer.style.aspectRatio = '9/16';
     modalContainer.style.height = '85vh';
     modalContainer.style.width = 'auto';
-    // Insertamos el iframe de YouTube
     modalContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
+}
+
+// Nuevo Modal para Instagram Reels
+function openInstagramModal(reelId) {
+    modal.classList.add('active');
+    modalContainer.style.aspectRatio = '9/16';
+    modalContainer.style.height = '85vh';
+    modalContainer.style.width = 'auto';
+    modalContainer.style.backgroundColor = '#ffffff'; // Fondo blanco interno para el embed
+    modalContainer.innerHTML = `<iframe src="https://www.instagram.com/reel/${reelId}/embed" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen></iframe>`;
 }
 
 function closeModal() {
     modal.classList.remove('active');
-    // Vaciamos el contenedor después de la animación de cierre para detener el video
-    setTimeout(() => { modalContainer.innerHTML = ''; }, 400);
+    setTimeout(() => { 
+        modalContainer.innerHTML = ''; 
+        modalContainer.style.backgroundColor = ''; // Limpiamos el fondo del modal por si el próximo es negro
+    }, 400);
 }
 
-// Cerrar al hacer click fuera del contenedor del video
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-/* --- CARGAR THUMBNAILS DE VIMEO DINÁMICAMENTE --- */
+/* --- THUMBNAILS VIMEO --- */
 async function loadVimeoThumbs() {
     const imgs = document.querySelectorAll('[data-vimeo-id]');
     imgs.forEach(async img => {
         const id = img.getAttribute('data-vimeo-id');
         try {
-            // Llamada a la API pública de Vimeo para obtener datos del video
             const res = await fetch(`https://vimeo.com/api/v2/video/${id}.json`);
             const data = await res.json();
-            // Asignamos la imagen miniatura grande
             img.src = data[0].thumbnail_large;
         } catch (err) { 
             console.error("Error cargando thumbnail de Vimeo", err);
         }
     });
 }
-// Ejecutamos la carga de miniaturas al inicio
 loadVimeoThumbs();
 </script>
 
