@@ -236,7 +236,6 @@
             box-shadow: var(--shadow-colored);
         }
 
-
         /* --- PRELOADER --- */
         body.loading { overflow: hidden; }
         
@@ -390,10 +389,9 @@
 <h1 class="section-title">Videos</h1>
 <section class="portfolio">
 
-    <!-- NUEVO REEL INSTAGRAM -->
-    <article class="project-item" onclick="openInstagramModal('TU_NUEVO_ID_AQUI')">
+    <!-- REEL INSTAGRAM INTEGRADO -->
+    <article class="project-item" onclick="openInstagramModal('DaBKbwwMpcR')">
         <div class="thumb-container ratio-vertical">
-            <!-- 👇 CAMBIA ESTA URL POR LA MINIATURA QUE QUIERAS USAR PARA EL REEL 👇 -->
             <img src="Portada video.png" class="project-img" alt="Reel Festa Major">
             <div class="overlay"><span class="play-btn">Ver Reel</span></div>
         </div>
@@ -403,6 +401,7 @@
         </div>
     </article>
     
+    <!-- YOUTUBE SHORT -->
     <article class="project-item" onclick="openYouTubeModal('srj63XebCds')">
         <div class="thumb-container ratio-vertical">
             <img src="https://img.youtube.com/vi/srj63XebCds/maxresdefault.jpg" class="project-img" alt="YouTube Short 2">
@@ -618,14 +617,14 @@ function openYouTubeModal(videoId) {
     modalContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
 }
 
-// Nuevo Modal para Instagram Reels
+// Modal para Instagram Reels (Visor integrado en la web)
 function openInstagramModal(reelId) {
     modal.classList.add('active');
     modalContainer.style.aspectRatio = '9/16';
     modalContainer.style.height = '85vh';
     modalContainer.style.width = 'auto';
     modalContainer.style.backgroundColor = '#ffffff'; // Fondo blanco interno para el embed
-    modalContainer.innerHTML = `<iframe src="https://www.instagram.com/reel/${reelId}/embed" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen></iframe>`;
+    modalContainer.innerHTML = `<iframe src="https://www.instagram.com/reel/${reelId}/embed/" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen></iframe>`;
 }
 
 function closeModal() {
