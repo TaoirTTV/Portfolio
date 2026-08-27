@@ -8,21 +8,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://wsrv.nl">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
         /* --- VARIABLES & RESET --- */
         :root {
-            --bg-color: #ffffff;
-            --bg-video-stack: #f8f9fa; 
-            --text-main: #111111;
-            --text-muted: #777777;
-            --accent-color: #4353ff; 
-            --shadow-subtle: 0 12px 30px rgba(0, 0, 0, 0.05);
-            --shadow-colored: 0 20px 40px rgba(67, 83, 255, 0.15); 
+            --bg-color: #0b0d10;
+            --bg-video-stack: #0b0d10;
+            --bg-raised: #16181d;
+            --text-main: #f3f1ec;
+            --text-muted: #8b8e94;
+            --accent-color: #ff7a3d;
+            --accent-2: #3d8bff;
+            --shadow-subtle: 0 12px 30px rgba(0, 0, 0, 0.35);
+            --shadow-colored: 0 20px 40px rgba(255, 122, 61, 0.2);
             --radius-lg: 20px;
             --radius-md: 12px;
             --font-main: 'Manrope', sans-serif;
+            --font-display: 'Anton', sans-serif;
             --transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
@@ -37,11 +40,13 @@
         }
 
         /* --- TYPOGRAPHY --- */
-        h1 { 
+        h1 {
+            font-family: var(--font-display);
             font-size: clamp(3rem, 7vw, 5.5rem);
-            font-weight: 300; 
-            letter-spacing: -0.04em; 
-            line-height: 1.1;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            line-height: 1;
+            text-transform: uppercase;
         }
         
         h1::after {
@@ -133,11 +138,11 @@
             width: 100%;
             overflow: hidden;
             position: relative;
-            background: #e9ecef;
+            background: var(--bg-raised);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-subtle);
             transition: var(--transition);
-            border: 1px solid rgba(0,0,0,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
         }
 
         .ratio-horizontal { padding-bottom: 56.25%; }
@@ -180,7 +185,7 @@
         .project-item:hover .thumb-container {
             transform: translateY(-8px);
             box-shadow: var(--shadow-colored);
-            border-color: rgba(67, 83, 255, 0.1);
+            border-color: rgba(255, 122, 61, 0.2);
         }
         
         .project-item:hover .project-img { transform: scale(1.04); }
@@ -197,12 +202,12 @@
             gap: 0.3rem;
         }
 
-        .project-cat { 
-            font-size: 0.75rem; 
-            color: var(--accent-color); 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 0.1em; 
+        .project-cat {
+            font-size: 0.75rem;
+            color: var(--accent-2);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
         /* --- GALLERY MASONRY --- */
@@ -212,28 +217,38 @@
             margin: 0 auto;
         }
 
+        /* Grid tipo masonry: cada foto reserva EXACTAMENTE su propia proporción real
+           (el JS calcula cuántas filas ocupa), así que ninguna imagen se recorta.
+           Las horizontales ocupan 2 columnas para tener más protagonismo. */
         .gallery {
-            column-count: 3;
-            column-gap: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 10px;
+            grid-auto-flow: dense;
+            gap: 1.25rem;
         }
 
         .gallery img {
             width: 100%;
             height: auto;
             border-radius: var(--radius-md);
-            margin-bottom: 1.5rem; 
             display: block;
             transition: var(--transition);
             opacity: 0;
             transform: translateY(30px);
             box-shadow: var(--shadow-subtle);
-            border: 1px solid rgba(0,0,0,0.03);
-            break-inside: avoid; 
+            border: 1px solid rgba(255,255,255,0.06);
+            grid-column: span 1;
+        }
+
+        .gallery img.wide {
+            grid-column: span 2;
         }
 
         .gallery img:hover {
             transform: translateY(-5px) scale(1.01) !important;
             box-shadow: var(--shadow-colored);
+            z-index: 2;
         }
 
         /* --- PRELOADER --- */
@@ -303,7 +318,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(11, 13, 16, 0.95);
             backdrop-filter: blur(15px);
             z-index: 2000;
             display: flex;
@@ -336,15 +351,15 @@
             text-transform: uppercase;
             letter-spacing: 0.1em;
             font-weight: 700;
-            background: rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.08);
             padding: 10px 20px;
             border-radius: 50px;
             transition: var(--transition);
         }
 
-        .close-modal:hover { 
-            background: var(--accent-color); 
-            color: #ffffff; 
+        .close-modal:hover {
+            background: var(--accent-color);
+            color: #ffffff;
         }
 
         footer {
@@ -352,15 +367,17 @@
             text-align: center;
             color: var(--text-muted);
             font-size: 0.85rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .reveal { opacity: 1 !important; transform: translateY(0) !important; }
 
-        @media (max-width: 1024px) { .gallery { column-count: 2; } }
+        @media (max-width: 1024px) {
+            .gallery { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 768px) {
             .portfolio { grid-template-columns: 1fr; gap: 3rem; }
-            .gallery { column-count: 1; }
+            .gallery { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
         }
     </style>
 </head>
@@ -418,37 +435,46 @@
 <h1 class="section-title">Galería</h1>
 <section class="gallery-container">
     <div class="gallery">
-        <img id="foto-1" class="reveal-item" data-highres="https://i.ibb.co/32X2Cd3/PSX-20250830-040959.jpg" alt="">
-        <img id="foto-2" class="reveal-item" data-highres="https://i.ibb.co/1YtXB3K3/PSX-20250830-040645.jpg" alt="">
-        <img id="foto-3" class="reveal-item" data-highres="https://i.ibb.co/9HRXzRtr/PSX-20250830-042912.jpg" alt="">
-        <img id="foto-4" class="reveal-item" data-highres="https://i.ibb.co/tT0rHYcv/PSX-20250830-042614.jpg" alt="">
-        <img id="foto-5" class="reveal-item" data-highres="https://i.ibb.co/gFZfWV1j/PSX-20250830-042002.jpg" alt="">
-        <img id="foto-6" class="reveal-item" data-highres="https://i.ibb.co/TxgbZ88S/PSX-20250830-040335.jpg" alt="">
-        <img id="foto-7" class="reveal-item" data-highres="https://i.ibb.co/39vdxJZD/PSX-20250830-040019.jpg" alt="">
-        <img id="foto-8" class="reveal-item" data-highres="https://i.ibb.co/wZnM7m1Y/20251125-DSC6432.jpg" alt="">
-        <img id="foto-9" class="reveal-item" data-highres="https://i.ibb.co/V02JW1K1/20251125-DSC6427.jpg" alt="">
-        <img id="foto-10" class="reveal-item" data-highres="https://i.ibb.co/d0XK461H/20251125-DSC6398.jpg" alt="">
-        <img id="foto-11" class="reveal-item" data-highres="https://i.ibb.co/Xr7cj9sg/DSC00064-2.jpg" alt="">
-        <img id="foto-12" class="reveal-item" data-highres="https://i.ibb.co/q3Ftfw27/DSC3310.jpg" alt="">
-        <img id="foto-13" class="reveal-item" data-highres="https://i.ibb.co/dsm0Wprw/DSC00048.jpg" alt="">
-        
-        <img id="foto-14" class="reveal-item" data-highres="https://i.ibb.co/Dsp3d8Y/DSC0210.jpg" alt="">
-        <img id="foto-15" class="reveal-item" data-highres="https://i.ibb.co/Pv63GDZF/DSC4270.jpg" alt="">
-        <img id="foto-16" class="reveal-item" data-highres="https://i.ibb.co/B2zHyrWJ/DSC9129.jpg" alt="">
-        <img id="foto-17" class="reveal-item" data-highres="https://i.ibb.co/Dg6w42Y5/DSC4030.jpg" alt="">
+        <img id="foto-43" class="reveal-item" data-highres="https://i.ibb.co/93Ghq0kK/DSC6332.jpg" alt="">
         <img id="foto-18" class="reveal-item" data-highres="https://i.ibb.co/kR4sK3X/DSC4065.jpg" alt="">
-        <img id="foto-19" class="reveal-item" data-highres="https://i.ibb.co/Z6Hhd18f/DSC4209.jpg" alt="">
-        <img id="foto-20" class="reveal-item" data-highres="https://i.ibb.co/qYhFFcm0/DSC9777.jpg" alt="">
-        <img id="foto-21" class="reveal-item" data-highres="https://i.ibb.co/b5RwP0pJ/DSC5152.jpg" alt="">
-        <img id="foto-22" class="reveal-item" data-highres="https://i.ibb.co/mV36wCMJ/DSC5102.jpg" alt="">
-        <img id="foto-23" class="reveal-item" data-highres="https://i.ibb.co/Lhn5fzHp/DSC5014.jpg" alt="">
-        <img id="foto-24" class="reveal-item" data-highres="https://i.ibb.co/PGhRwCy8/DSC5000.jpg" alt="">
-        <img id="foto-25" class="reveal-item" data-highres="https://i.ibb.co/Qv86hvqQ/DSC4977.jpg" alt="">
-        <img id="foto-26" class="reveal-item" data-highres="https://i.ibb.co/S4L4fZqX/DSC4967.jpg" alt="">
-        <img id="foto-27" class="reveal-item" data-highres="https://i.ibb.co/mVs28DJ3/DSC4856.jpg" alt="">
-        <img id="foto-28" class="reveal-item" data-highres="https://i.ibb.co/VcHRsyRH/DSC5003.jpg" alt="">
+        <img id="foto-14" class="reveal-item" data-highres="https://i.ibb.co/Dsp3d8Y/DSC0210.jpg" alt="">
         <img id="foto-29" class="reveal-item" data-highres="https://i.ibb.co/NdWTPBrP/DSC4815.jpg" alt="">
+        <img id="foto-28" class="reveal-item" data-highres="https://i.ibb.co/VcHRsyRH/DSC5003.jpg" alt="">
+        <img id="foto-13" class="reveal-item" data-highres="https://i.ibb.co/dsm0Wprw/DSC00048.jpg" alt="">
+        <img id="foto-4" class="reveal-item" data-highres="https://i.ibb.co/tT0rHYcv/PSX-20250830-042614.jpg" alt="">
+        <img id="foto-27" class="reveal-item" data-highres="https://i.ibb.co/mVs28DJ3/DSC4856.jpg" alt="">
         <img id="foto-30" class="reveal-item" data-highres="https://i.ibb.co/Y4bqnCqw/DSC0221.jpg" alt="">
+        <img id="foto-12" class="reveal-item" data-highres="https://i.ibb.co/q3Ftfw27/DSC3310.jpg" alt="">
+        <img id="foto-19" class="reveal-item" data-highres="https://i.ibb.co/Z6Hhd18f/DSC4209.jpg" alt="">
+        <img id="foto-8" class="reveal-item" data-highres="https://i.ibb.co/wZnM7m1Y/20251125-DSC6432.jpg" alt="">
+        <img id="foto-46" class="reveal-item" data-highres="https://i.ibb.co/KzQwZy6J/DSC6153.jpg" alt="">
+        <img id="foto-1" class="reveal-item" data-highres="https://i.ibb.co/32X2Cd3/PSX-20250830-040959.jpg" alt="">
+        <img id="foto-3" class="reveal-item" data-highres="https://i.ibb.co/9HRXzRtr/PSX-20250830-042912.jpg" alt="">
+        <img id="foto-42" class="reveal-item" data-highres="https://i.ibb.co/Gv3rRHzT/DSC6557.jpg" alt="">
+        <img id="foto-22" class="reveal-item" data-highres="https://i.ibb.co/mV36wCMJ/DSC5102.jpg" alt="">
+        <img id="foto-48" class="reveal-item" data-highres="https://i.ibb.co/nMLc6Lmd/DSC5892.jpg" alt="">
+        <img id="foto-41" class="reveal-item" data-highres="https://i.ibb.co/whyvP2Zq/DSC6592.jpg" alt="">
+        <img id="foto-25" class="reveal-item" data-highres="https://i.ibb.co/Qv86hvqQ/DSC4977.jpg" alt="">
+        <img id="foto-20" class="reveal-item" data-highres="https://i.ibb.co/qYhFFcm0/DSC9777.jpg" alt="">
+        <img id="foto-17" class="reveal-item" data-highres="https://i.ibb.co/Dg6w42Y5/DSC4030.jpg" alt="">
+        <img id="foto-6" class="reveal-item" data-highres="https://i.ibb.co/TxgbZ88S/PSX-20250830-040335.jpg" alt="">
+        <img id="foto-23" class="reveal-item" data-highres="https://i.ibb.co/Lhn5fzHp/DSC5014.jpg" alt="">
+        <img id="foto-11" class="reveal-item" data-highres="https://i.ibb.co/Xr7cj9sg/DSC00064-2.jpg" alt="">
+        <img id="foto-40" class="reveal-item" data-highres="https://i.ibb.co/bMmHSzSQ/DSC6617.jpg" alt="">
+        <img id="foto-5" class="reveal-item" data-highres="https://i.ibb.co/gFZfWV1j/PSX-20250830-042002.jpg" alt="">
+        <img id="foto-47" class="reveal-item" data-highres="https://i.ibb.co/840y6rF1/DSC6117.jpg" alt="">
+        <img id="foto-21" class="reveal-item" data-highres="https://i.ibb.co/b5RwP0pJ/DSC5152.jpg" alt="">
+        <img id="foto-9" class="reveal-item" data-highres="https://i.ibb.co/V02JW1K1/20251125-DSC6427.jpg" alt="">
+        <img id="foto-45" class="reveal-item" data-highres="https://i.ibb.co/rGn1Y17y/DSC6298.jpg" alt="">
+        <img id="foto-44" class="reveal-item" data-highres="https://i.ibb.co/v44s9Wc4/DSC6304.jpg" alt="">
+        <img id="foto-16" class="reveal-item" data-highres="https://i.ibb.co/B2zHyrWJ/DSC9129.jpg" alt="">
+        <img id="foto-26" class="reveal-item" data-highres="https://i.ibb.co/S4L4fZqX/DSC4967.jpg" alt="">
+        <img id="foto-2" class="reveal-item" data-highres="https://i.ibb.co/1YtXB3K3/PSX-20250830-040645.jpg" alt="">
+        <img id="foto-7" class="reveal-item" data-highres="https://i.ibb.co/39vdxJZD/PSX-20250830-040019.jpg" alt="">
+        <img id="foto-24" class="reveal-item" data-highres="https://i.ibb.co/PGhRwCy8/DSC5000.jpg" alt="">
+        <img id="foto-15" class="reveal-item" data-highres="https://i.ibb.co/Pv63GDZF/DSC4270.jpg" alt="">
+        <img id="foto-10" class="reveal-item" data-highres="https://i.ibb.co/d0XK461H/20251125-DSC6398.jpg" alt="">
+        <img id="foto-39" class="reveal-item" data-highres="https://i.ibb.co/tTnr3rzj/DSC6656.jpg" alt="">
     </div>
 </section>
 
@@ -654,32 +680,90 @@ async function loadVimeoThumbs() {
 loadVimeoThumbs();
 
 /* --- AUTOMATIZACIÓN DE MINIATURAS (CDN AL VUELO) Y LIGHTBOX PARA IMÁGENES --- */
-document.addEventListener("DOMContentLoaded", () => {
-    // Seleccionamos todas las imágenes de la galería que tengan el atributo data-highres
-    const galleryImages = document.querySelectorAll('.gallery img[data-highres]');
+// Masonry sin recortes: cada foto reserva exactamente las filas de grid que
+// necesita según su proporción REAL, así ninguna imagen se corta jamás.
+const MASONRY_ROW = 10; // debe coincidir con grid-auto-rows en CSS
+const MASONRY_GAP = 20; // debe coincidir con "gap" del .gallery en CSS (1.25rem)
 
-    galleryImages.forEach(img => {
-        const highResUrl = img.getAttribute('data-highres');
-        
-        if (highResUrl) {
-            // Limpiamos la URL (wsrv.nl funciona mejor sin el https:// inicial)
+function setMasonrySpan(img) {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    if (img.naturalWidth > img.naturalHeight * 1.15) img.classList.add('wide');
+
+    const renderedWidth = img.getBoundingClientRect().width;
+    if (!renderedWidth) return;
+    const renderedHeight = renderedWidth * (img.naturalHeight / img.naturalWidth);
+    const rowSpan = Math.ceil((renderedHeight + MASONRY_GAP) / (MASONRY_ROW + MASONRY_GAP));
+    img.style.gridRowEnd = `span ${rowSpan}`;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    // Cada galería (Galería / Automoción) se reordena por separado
+    const galleries = document.querySelectorAll('.gallery');
+
+    for (const container of galleries) {
+        const imgs = Array.from(container.querySelectorAll('img[data-highres]'));
+        if (!imgs.length) continue;
+
+        // Antes de maquetar necesitamos saber la orientación REAL de cada foto,
+        // así que precargamos la miniatura de todas (son ligeras: 600px webp)
+        await Promise.all(imgs.map(img => new Promise(resolve => {
+            const highResUrl = img.getAttribute('data-highres');
             const cleanUrl = highResUrl.replace(/^https?:\/\//, '');
-            
-            // CONTRUIMOS LA MINIATURA: 
-            // w=600 (600px de ancho) | output=webp (formato ultra ligero) | q=75 (calidad 75%)
             const thumbnailUrl = `https://wsrv.nl/?url=${cleanUrl}&w=600&output=webp&q=75`;
-            
-            // Asignamos la miniatura para que cargue rapidísimo
-            img.src = thumbnailUrl;
-            img.setAttribute('loading', 'lazy'); // Solo cargan al hacer scroll
-            img.setAttribute('decoding', 'async'); // Evita que la decodificación bloquee el scroll
-            img.classList.add('gallery-img'); // Añadimos la clase para el cursor pointer
-            
-            // Configuramos el evento para abrir la foto original
-            img.addEventListener('click', () => {
-                openImageModal(highResUrl);
-            });
+            img.dataset.thumb = thumbnailUrl;
+
+            const preload = new Image();
+            preload.onload = () => {
+                img.dataset.wide = (preload.naturalWidth > preload.naturalHeight * 1.15) ? '1' : '0';
+                resolve();
+            };
+            preload.onerror = () => { img.dataset.wide = '0'; resolve(); };
+            preload.src = thumbnailUrl;
+        })));
+
+        // Reordenamos para que nunca queden dos fotos horizontales seguidas
+        // (no elimina el 100% de los huecos del grid, pero reduce la mayoría)
+        const wideImgs = imgs.filter(img => img.dataset.wide === '1');
+        const normalImgs = imgs.filter(img => img.dataset.wide !== '1');
+        const ordered = [];
+        let lastWasWide = false;
+        while (wideImgs.length || normalImgs.length) {
+            if (!lastWasWide && wideImgs.length) {
+                ordered.push(wideImgs.shift());
+                lastWasWide = true;
+            } else if (normalImgs.length) {
+                ordered.push(normalImgs.shift());
+                lastWasWide = false;
+            } else {
+                ordered.push(wideImgs.shift());
+                lastWasWide = true;
+            }
         }
+        ordered.forEach(img => container.appendChild(img));
+
+        // Ya con el orden definitivo, mostramos las miniaturas (ya están en caché)
+        ordered.forEach(img => {
+            const highResUrl = img.getAttribute('data-highres');
+            img.src = img.dataset.thumb;
+            img.setAttribute('loading', 'lazy');
+            img.setAttribute('decoding', 'async');
+            img.classList.add('gallery-img');
+            if (img.dataset.wide === '1') img.classList.add('wide');
+
+            if (img.complete) setMasonrySpan(img);
+            else img.addEventListener('load', () => setMasonrySpan(img));
+
+            img.addEventListener('click', () => openImageModal(highResUrl));
+        });
+    }
+
+    // Recalculamos los tamaños al cambiar de ancho de ventana (cambia el nº de columnas)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            document.querySelectorAll('.gallery img.gallery-img').forEach(setMasonrySpan);
+        }, 200);
     });
 });
 
