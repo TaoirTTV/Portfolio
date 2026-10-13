@@ -184,7 +184,7 @@
             pointer-events: none;
         }
         .tr, .ch { display: inline-block; will-change: transform, opacity; }
-        .mask { display: inline-block; overflow: hidden; padding: 0.14em 0.04em 0.02em; margin: -0.14em -0.04em -0.02em; vertical-align: top; }
+        .mask { display: inline-block; overflow: hidden; padding: 0.32em 0.06em 0.04em; margin: -0.32em -0.06em -0.04em; vertical-align: top; }
         .mask > .ch { display: inline-block; }
 
         .big {
@@ -325,7 +325,7 @@
         .more { display: flex; flex-direction: column; align-items: center; }
         .more .y { font-size: clamp(2.4rem, 7vw, 6rem); color: var(--accent-2); margin-bottom: 0.15em; }
         .more .m1 { font-size: clamp(4rem, 17vw, 13rem); }
-        .more .m2 { font-size: clamp(4rem, 17vw, 13rem); color: var(--accent-color); margin-top: 0.04em; }
+        .more .m2 { font-size: clamp(4rem, 17vw, 13rem); color: var(--accent-color); margin-top: 0.16em; }
         .orb {
             width: 30vmax; height: 30vmax;
             left: 50%; top: 50%;
@@ -836,20 +836,39 @@
     const irisSvg = document.getElementById('irisSvg');
     const R = 90, BLADES = 7;
     irisSvg.innerHTML = `
-        <defs><clipPath id="irisClip"><circle r="${R}"/></clipPath></defs>
         <circle r="${R + 7}" fill="none" stroke="rgba(255,122,61,0.55)" stroke-width="1" stroke-dasharray="1 5"/>
-        <g clip-path="url(#irisClip)" id="irisBlades"></g>
+        <path id="irisBody" fill="#16181d" fill-rule="evenodd"/>
+        <path id="irisEdges" fill="none" stroke="rgba(255,122,61,0.75)" stroke-width="1.2" stroke-linecap="round"/>
         <circle r="${R}" fill="none" stroke="rgba(243,241,236,0.35)" stroke-width="1.5"/>`;
-    const bladesG = irisSvg.querySelector('#irisBlades');
-    const blades = [];
-    for (let i = 0; i < BLADES; i++) {
-        const outer = document.createElementNS(NS, 'g');
-        outer.setAttribute('transform', `rotate(${i * 360 / BLADES}) translate(${R} 0)`);
-        const inner = document.createElementNS(NS, 'g');
-        inner.innerHTML = `<path d="M0 -40 L0 ${R * 2.4} L${R * 2.2} ${R * 2.4} L${R * 2.2} -40 Z" fill="#16181d" stroke="rgba(255,122,61,0.75)" stroke-width="1.2"/>`;
-        outer.appendChild(inner);
-        bladesG.appendChild(outer);
-        blades.push(inner);
+    const irisBody = irisSvg.querySelector('#irisBody');
+    const irisEdges = irisSvg.querySelector('#irisEdges');
+
+    // Dibuja el diafragma con apertura k (0 = abierto, 1 = cerrado):
+    // un polígono regular recortado en el círculo y, por cada lado, la arista
+    // de la lámina prolongada hasta el borde (efecto molinillo).
+    function drawIris(k) {
+        const rv = R * (0.9 - 0.78 * k);
+        const rot = -Math.PI / 2 + k * 0.7;
+        const v = [];
+        for (let i = 0; i < BLADES; i++) {
+            const a = rot + i * 2 * Math.PI / BLADES;
+            v.push([rv * Math.cos(a), rv * Math.sin(a)]);
+        }
+        const f = n => n.toFixed(2);
+        let body = `M${-R} 0A${R} ${R} 0 1 0 ${R} 0A${R} ${R} 0 1 0 ${-R} 0Z M${f(v[0][0])} ${f(v[0][1])}`;
+        for (let i = 1; i < BLADES; i++) body += `L${f(v[i][0])} ${f(v[i][1])}`;
+        irisBody.setAttribute('d', body + 'Z');
+
+        let edges = '';
+        for (let i = 0; i < BLADES; i++) {
+            const [x0, y0] = v[i], [x1, y1] = v[(i + 1) % BLADES];
+            const len = Math.hypot(x1 - x0, y1 - y0);
+            const dx = (x1 - x0) / len, dy = (y1 - y0) / len;
+            const b = x0 * dx + y0 * dy;
+            const t = -b + Math.sqrt(b * b - (x0 * x0 + y0 * y0 - R * R));
+            edges += `M${f(x0)} ${f(y0)}L${f(x0 + t * dx)} ${f(y0 + t * dy)}`;
+        }
+        irisEdges.setAttribute('d', edges);
     }
 
     // --- Motor de keyframes ---
@@ -909,15 +928,15 @@
 
     // 1 · Nombre: sale letra a letra hacia arriba
     anim($('hint'), [[0, { o: 1 }], [0.035, { o: 0, Y: 2 }]]);
-    stagger(split.name, 0.03, 0.007, t => [[t, {}], [t + 0.07, { y: -115, r: -4 }, 'in'], [t + 0.071, { o: 0 }]]);
-    stagger(split.name2, 0.045, 0.006, t => [[t, {}], [t + 0.07, { y: -115, r: -4 }, 'in'], [t + 0.071, { o: 0 }]]);
+    stagger(split.name, 0.03, 0.007, t => [[t, {}], [t + 0.07, { y: -150, r: -4 }, 'in'], [t + 0.071, { o: 0 }]]);
+    stagger(split.name2, 0.045, 0.006, t => [[t, {}], [t + 0.07, { y: -150, r: -4 }, 'in'], [t + 0.071, { o: 0 }]]);
     anim($('name-k'), [[0.03, {}], [0.08, { o: 0, Y: -4 }, 'in']]);
     anim($('name-line'), [[0.05, {}], [0.1, { sx: 0 }, 'io']]);
     anim($('name-t'), [[0.06, {}], [0.11, { o: 0, Y: 3 }, 'in']]);
 
     // 2 · Videoclips: las letras suben desde la máscara, el ecualizador se despliega
     anim($('k1'), [[0.12, { o: 0, Y: 4 }], [0.17, { o: 1, Y: 0 }, 'out'], [0.27, {}], [0.31, { o: 0, Y: -4 }, 'in']]);
-    stagger(split.w1, 0.12, 0.006, t => [[t, { y: 115, r: 8, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.06, { y: 0, r: 0 }, 'out'], [t + 0.155, {}], [t + 0.2, { y: -115, r: -6 }, 'in'], [t + 0.201, { o: 0 }]]);
+    stagger(split.w1, 0.12, 0.006, t => [[t, { y: 125, r: 8, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.06, { y: 0, r: 0 }, 'out'], [t + 0.155, {}], [t + 0.2, { y: -150, r: -6 }, 'in'], [t + 0.201, { o: 0 }]]);
     anim($('eq'), [[0.15, { sx: 0, o: 0 }], [0.22, { sx: 1, o: 1 }, 'out'], [0.28, {}], [0.33, { sy: 0, o: 0 }, 'in']]);
 
     // 3 · Dron: aparece el suelo en perspectiva y la mira; las letras caen desde arriba
@@ -931,21 +950,20 @@
     anim($('iris'), [[0.53, { o: 0, s: 0.55, r: -90 }], [0.62, { o: 1, s: 1, r: 0 }, 'out'], [0.74, { r: 25 }, 'lin'], [0.81, { o: 0, s: 1.9, r: 60 }, 'in']]);
     anim($('flash'), [[0.648, { o: 0 }], [0.662, { o: 0.65 }, 'out'], [0.71, { o: 0 }, 'out']]);
     anim($('k3'), [[0.665, { o: 0, Y: 4 }], [0.705, { o: 1, Y: 0 }, 'out'], [0.76, {}], [0.8, { o: 0, Y: -4 }, 'in']]);
-    stagger(split.w3, 0.662, 0.005, t => [[t, { y: 115, r: 8, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.055, { y: 0, r: 0 }, 'back'], [t + 0.1, {}], [t + 0.14, { y: -115, r: -6 }, 'in'], [t + 0.141, { o: 0 }]]);
+    stagger(split.w3, 0.662, 0.005, t => [[t, { y: 125, r: 8, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.055, { y: 0, r: 0 }, 'back'], [t + 0.1, {}], [t + 0.14, { y: -150, r: -6 }, 'in'], [t + 0.141, { o: 0 }]]);
 
     // 5 · Y mucho más
     anim($('orb'), [[0.82, { o: 0, s: 0 }], [0.97, { o: 1, s: 1.5 }, 'out']]);
-    stagger(split.y, 0.81, 0, t => [[t, { y: 115, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.05, { y: 0 }, 'out']]);
-    stagger(split.m1, 0.83, 0.008, t => [[t, { y: 115, r: 8, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.06, { y: 0, r: 0 }, 'back']]);
-    stagger(split.m2, 0.87, 0.013, t => [[t, { y: 115, r: 8, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.06, { y: 0, r: 0 }, 'back']]);
+    stagger(split.y, 0.81, 0, t => [[t, { y: 125, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.05, { y: 0 }, 'out']]);
+    stagger(split.m1, 0.83, 0.008, t => [[t, { y: 125, r: 8, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.06, { y: 0, r: 0 }, 'back']]);
+    stagger(split.m2, 0.87, 0.013, t => [[t, { y: 125, r: 8, o: 0 }], [t + 0.001, { o: 1 }], [t + 0.06, { y: 0, r: 0 }, 'back']]);
 
     // Apertura del diafragma: abierto → cerrado (disparo) → abierto
-    function irisAngle(P) {
-        const OPEN = 18, CLOSED = 84;
-        if (P < 0.58) return OPEN;
-        if (P < 0.65) return OPEN + (CLOSED - OPEN) * ease.io((P - 0.58) / 0.07);
-        if (P < 0.72) return CLOSED - (CLOSED - OPEN) * ease.out((P - 0.65) / 0.07);
-        return OPEN;
+    function irisAmount(P) {
+        if (P < 0.58) return 0;
+        if (P < 0.65) return ease.io((P - 0.58) / 0.07);
+        if (P < 0.72) return 1 - ease.out((P - 0.65) / 0.07);
+        return 0;
     }
 
     // --- Bucle con inercia ---
@@ -972,11 +990,8 @@
         render(current);
         bar.style.transform = `scaleX(${current.toFixed(4)})`;
 
-        const ang = Math.round(irisAngle(current) * 10) / 10;
-        if (ang !== lastIris) {
-            lastIris = ang;
-            blades.forEach(b => b.setAttribute('transform', `rotate(${ang})`));
-        }
+        const ir = Math.round(irisAmount(current) * 1000) / 1000;
+        if (ir !== lastIris) { lastIris = ir; drawIris(ir); }
 
         const alt = String(Math.round(Math.max(0, Math.min(1, (current - 0.31) / 0.22)) * 120)).padStart(3, '0');
         if (alt !== lastAlt) { lastAlt = alt; altVal.textContent = alt; }
@@ -1012,7 +1027,6 @@
     readScroll();
     current = target;
     render(current);
-    blades.forEach(b => b.setAttribute('transform', `rotate(${irisAngle(current)})`));
     kick();
     window.addEventListener('scroll', kick, { passive: true });
     window.addEventListener('resize', kick);
